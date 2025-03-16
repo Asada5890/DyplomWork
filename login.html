@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration & Login</title>
+</head>
+<body>
+    <div style="display: flex; gap: 2rem;">
+        <!-- Форма регистрации -->
+        <div>
+            <h2>Registration</h2>
+            <form id="registerForm">
+                <input type="email" id="regEmail" placeholder="Email" required><br><br>
+                <input type="password" id="regPassword" placeholder="Password" required><br><br>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+
+        <!-- Форма входа -->
+        <div>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" required><br><br>
+                <input type="password" id="loginPassword" placeholder="Password" required><br><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        // Обработка регистрации
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const response = await fetch('http://localhost:8000/users/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: document.getElementById('regEmail').value,
+                    password: document.getElementById('regPassword').value
+                })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerHTML = response.ok 
+                ? `User created: ${JSON.stringify(result)}`
+                : `Error: ${result.detail || 'Unknown error'}`;
+        });
+
+        // Обработка входа
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const response = await fetch('http://localhost:8000/auth/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerHTML = response.ok 
+                ? `Token: ${result.access_token}`
+                : `Error: ${result.detail || 'Unknown error'}`;
+        });
+    </script>
+</body>
+</html>
