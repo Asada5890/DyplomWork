@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background-color: rgb(12, 12, 199);
+  padding: 0 15px;
+}
+header img {
+  width: 25px;
+  height: 25px;
+}
+header ul {
+  margin-left: auto;
+}
+header ul li {
+  all: unset;
+}
+header ul li a {
+  all: unset;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left: 14px;
+}
+header ul li a:hover {
+  color: green;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.profile-info {
+  margin-bottom: 20px;
+}
+.profile-info h2 {
+  margin-top: 0;
+}
+.profile-info p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #666;
+}
+.profile-info p span {
+  font-weight: bold;
+}
+.profile-orders {
+  margin-bottom: 20px;
+}
+.profile-orders h2 {
+  margin-top: 0;
+}
+.profile-orders ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.profile-orders ul li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #666;
+}
+.profile-settings h2 {
+  margin-top: 0;
+}
+.profile-settings ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.profile-settings ul li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #666;
+}
+.profile-settings ul li a {
+  text-decoration: none;
+  color: #337ab7;
+  transition: 0.3s;
+}
+.profile-settings ul li a:hover {
+  color: #357c23;
+}/*# sourceMappingURL=profile.css.map */

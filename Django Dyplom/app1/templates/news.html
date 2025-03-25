@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/app1/static/css/news.css">
+</head>
+<body>
+    <header>
+
+        <div class="logo"><a href="{% url 'home' %}">LOGO</a></div>
+        <ul>
+            
+            <li><a href="{% url 'news' %}">news</a></li>
+            <li><a href="">Contacts</a></li>
+            <li><a href="">Contacts</a></li>
+            <a href="{% url 'cart' %}"><img src="/app1/static/img/cart.png" alt=""></a>
+        </ul>
+
+    </header>
+
+    <style>
+        
+    </style>
+
+
+    <div class="slider">
+        <div class="slides">
+            <div class="slide"   style="background-image: url('https://s0.rbk.ru/v6_top_pics/media/img/9/19/756807020522199.jpg');"></div>
+            <div class="slide" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuwlgluj8tU2e2qf3OnV0Fpqqe6vO1zVBhsA&s');"></div>
+            <div class="slide" style="background-image: url('https://prorab01.ru/upload/5c19f8a708682-stroimaterial.png');"></div>
+        </div>
+        <div class="buttons">
+            <button class="button" id="prev"><-</button>
+            <button class="button" id="next">-></button>
+        </div>
+    </div>
+    
+    <div class="why_us">
+        <h2>Почему стоит выбрать именно нас?</h2>
+        <ul>
+            <div class="block">
+                <div class="number">
+                        1
+                </div>
+                <div class="description">
+                    <h2>Качество</h2>
+                    <b>Умение сдержать обещание.</b><br>
+                        У нас самые качественные материала, многолетний поыт на рынке
+                </div>
+            </div>
+            <div class="block">
+                <div class="number">
+                        2
+                </div>
+                <div class="description">
+                    <h2>Скорость</h2>
+                        <b>Самая быстрая доставка в столице.</b><br> Сотни магазинов по всей стране для самовывоза
+                </div>
+            </div>
+            <div class="block">
+                <div class="number">
+                        3
+                </div>
+                <div class="description">
+                    <h2>Упорство</h2>
+                       <b>Ничто не может нас сломить!</b><br>Санкции ударили по страительному бизнесу, но мы выдержали
+                </div>
+            </div>
+
+
+
+            
+        </ul>
+
+    </div>
+
+</body>
+<script src="/app1/static/js/slide.js"></script>
+</html>

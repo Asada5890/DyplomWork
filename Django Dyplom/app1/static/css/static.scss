@@ -1,0 +1,120 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+header{
+    display: flex;
+    align-items: center;
+    background-color: rgb(12, 12, 199);
+    padding: 0 15px;
+    img{
+        width: 25px;
+        height: 25px;
+    }
+
+ul{
+
+    margin-left: auto;
+    li{
+        
+        all:unset;
+        a{
+            all: unset;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-left: 14px;
+            
+            &:hover{
+                color: green;
+            }
+        }
+    }
+}
+}
+
+
+
+.products{
+    display: flex;
+    flex-wrap: wrap;
+   
+
+    .product{
+        margin: 10px auto;
+        width: 200px;
+        height: 250px;
+        text-align: center;
+        border: 3px solid black;
+        border-radius: 16px;
+        cursor: pointer;
+        .noimg{
+            width: 15px;
+            height: 15px;
+        }
+        transition: 0.3s;
+        &:hover{
+            height: 300px;
+
+            
+    }
+    }
+}
+
+
+footer{
+    .footer-container{
+        display: flex;
+        padding: 15px;
+        background-color: #f0f0f0;
+
+        .contacts{
+            margin: 0 auto;
+        }
+        .feedback{
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            form{
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                input{
+                    all:unset;
+                    margin-top: 12px;
+                    background-color: white;
+                    padding: 14px;
+                    border: 3px solid black;
+                    border-radius: 16px;
+                }
+                textarea{
+                    all:unset;
+                    margin-top: 12px;
+                    background-color: white;
+                    padding: 14px;
+                    border: 3px solid black;
+                    border-radius: 16px;
+                }
+                button{
+                    all:unset;
+                    margin-top: 12px;
+                    background-color: green;
+                    transition: 0.3s;
+                    padding: 15px;
+                    color: white;
+                    border-radius: 16px;
+                    cursor: pointer;
+                    &:hover{
+                        background-color: blue;
+                    }
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/app1/static/css/profile.css">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+<body>
+    <header>
+
+        <div class="logo"><a href="{% url 'home' %}">LOGO</a></div>
+        <ul>
+            
+            <li><a href="{% url 'news' %}">news</a></li>
+            <li><a href="">Contacts</a></li>
+            <li><a href="">Contacts</a></li>
+            <a href="{% url 'cart' %}"><img src="/app1/static/img/cart.png" alt=""></a>
+        </ul>
+
+    </header>
+
+    <div class="profile">
+    <div class="profile-info">
+        <h2>Профиль</h2>
+        <p>Имя: <span>{{ user.name }}</span></p>
+        <p>Фамилия: <span>{{ user.sur_name}}</span></p>
+        <p>Электронная почта: <span>{{ user.email }}</span></p>
+        <p>Телефон: <span>{{ user.phone_number }}</span></p>
+    </div>
+    <div class="profile-orders">
+        <h2>Заказы</h2>
+        <ul>
+            <li>Заказ 1</li>
+            <li>Заказ 2</li>
+            <li>Заказ 3</li>
+        </ul>
+    </div>
+    <div class="profile-settings">
+        <h2>Настройки</h2>
+        <ul>
+            <li><a href="#">Изменить пароль</a></li>
+            <li><a href="#">Изменить адрес электронной почты</a></li>
+            <li><a href="#">Изменить телефон</a></li>
+        </ul>
+    </div>
+</div>
+
+
+</body>
+</html>

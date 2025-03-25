@@ -1,0 +1,127 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+header{
+    display: flex;
+    align-items: center;
+    background-color: rgb(12, 12, 199);
+    padding: 0 15px;
+    img{
+        width: 25px;
+        height: 25px;
+    }
+
+ul{
+
+    margin-left: auto;
+    li{
+        
+        all:unset;
+        a{
+            all: unset;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-left: 14px;
+            
+            &:hover{
+                color: green;
+            }
+        }
+    }
+}
+}
+
+section{
+    display: flex;
+
+
+    .products{
+    display: flex;
+    flex-direction: column;
+
+    
+
+    .product_type{
+        display: flex;
+        border: 3px solid black;
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 16px;
+        img{
+            width: 250px;
+        }
+        .description{
+            margin-left: 124px;
+            .buttons{
+                display: flex;
+                align-items: center;
+                .amount{
+                    margin: 0 15px;
+                }
+                button{
+                    all: unset;
+                    background-color: green;
+                    padding: 14px;
+                    color:white;
+                    cursor: pointer;
+                    border-radius: 16px;
+                    width: 75px;
+                    text-align: center;
+
+                    &:last-child{
+                        background-color: red;
+                    }
+                }
+            }
+        }
+    }
+}
+
+form{
+    margin: 15px auto auto auto;
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    border: 3px solid black;
+    border-radius: 20px;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.173);
+    input[type='text']{
+        all: unset;
+        padding: 10px;
+        border: 3px solid black;
+        border-radius: 16px;
+    }
+    input[type='submit']{
+        all: unset;
+        background-color: green;
+        padding: 10px;
+        color: white;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        &:hover{
+            background-color: lightgreen;
+            color: black;
+        }
+    }
+    select{
+        all: unset;
+        border: 3px solid black;
+        padding: 5px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 16px;
+        transition: 0.3s;
+        &:hover{
+            background-color: #f0f0f0;
+        }
+    }
+}
+
+}
+

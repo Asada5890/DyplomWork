@@ -1,0 +1,103 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background-color: rgb(12, 12, 199);
+  padding: 0 15px;
+}
+img .noimg{
+  height: 150px;
+}
+header img {
+  width: 25px;
+  height: 25px;
+}
+header ul {
+  margin-left: auto;
+}
+header ul li {
+  all: unset;
+}
+header ul li a {
+  all: unset;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left: 14px;
+}
+header ul li a:hover {
+  color: green;
+}
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+}
+.products .product {
+  margin: 10px auto;
+  width: 200px;
+  height: 250px;
+  text-align: center;
+  border: 3px solid black;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.products .product:hover {
+  height: 300px;
+}
+
+footer .footer-container {
+  display: flex;
+  padding: 15px;
+  background-color: #f0f0f0;
+}
+footer .footer-container .contacts {
+  margin: 0 auto;
+}
+footer .footer-container .feedback {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+footer .footer-container .feedback form {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+footer .footer-container .feedback form input {
+  all: unset;
+  margin-top: 12px;
+  background-color: white;
+  padding: 14px;
+  border: 3px solid black;
+  border-radius: 16px;
+}
+footer .footer-container .feedback form textarea {
+  all: unset;
+  margin-top: 12px;
+  background-color: white;
+  padding: 14px;
+  border: 3px solid black;
+  border-radius: 16px;
+}
+footer .footer-container .feedback form button {
+  all: unset;
+  margin-top: 12px;
+  background-color: green;
+  transition: 0.3s;
+  padding: 15px;
+  color: white;
+  border-radius: 16px;
+  cursor: pointer;
+}
+footer .footer-container .feedback form button:hover {
+  background-color: blue;
+}/*# sourceMappingURL=static.css.map */

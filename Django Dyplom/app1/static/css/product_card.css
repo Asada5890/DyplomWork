@@ -1,0 +1,94 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background-color: rgb(12, 12, 199);
+  padding: 0 15px;
+}
+header img {
+  width: 25px;
+  height: 25px;
+}
+header ul {
+  margin-left: auto;
+}
+header ul li {
+  all: unset;
+}
+header ul li a {
+  all: unset;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left: 14px;
+}
+header ul li a:hover {
+  color: green;
+}
+
+section {
+  display: flex;
+  margin: 5% auto;
+  padding: 10px;
+}
+section .product_card {
+  display: flex;
+  padding: 15px;
+  max-width: 450px;
+  max-height: 650px;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  border: 3px solid black;
+  border-radius: 16px;
+}
+section .product_card .name_with_img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+section .product_card .name_with_img img {
+  height: 300px;
+}
+section .product_card .name_with_img h2 {
+  color: green;
+}
+section .description {
+  flex-wrap: wrap;
+  display: flex;
+  margin: auto;
+  text-align: start;
+  font-size: 16px;
+  margin: 0 auto 0 2%;
+}
+
+.characteristics {
+  display: flex;
+  flex-direction: column;
+}
+.characteristics .characteristics_list {
+  margin: 5% 20% 0 auto;
+}
+.characteristics ul {
+  all: unset;
+}
+.characteristics ul li {
+  list-style: none;
+  margin-top: 25px;
+}
+.characteristics hr {
+  height: 1.5px;
+  border: none;
+  background-color: black;
+}
+.characteristics span::after {
+  content: "- - - - - - - - - -";
+  font-size: 10px;
+  text-align: end;
+  margin: 0 3px;
+}/*# sourceMappingURL=product_card.css.map */

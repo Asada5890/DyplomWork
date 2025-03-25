@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/app1/static/css/cart.css">
+</head>
+<body>
+    <header>
+
+        <div class="logo"><a href="{% url 'home' %}">LOGO</a></div>
+        <ul>
+            <li><a href="{% url 'user_profile' user.id %}">Профиль</a></li>
+            <li><a href="{% url 'news' %}">news</a></li>
+            <li><a href="">Contacts</a></li>
+            <li><a href="">Contacts</a></li>
+            <a href="{% url 'cart' %}"><img src="/app1/static/img/cart.png" alt=""></a>
+        </ul>
+
+    </header>
+
+
+        <section>
+        <form action="" method="post">
+    <label for="fio">ФИО:</label>
+    <input type="text" id="fio" name="fio"><br><br>
+    <label for="address">Адрес доставки:</label>
+    <input type="text" id="address" name="address"><br><br>
+    <label for="payment">Выберите способ оплаты:</label>
+    <select id="payment" name="payment">
+        <option value="card">Картой</option>
+        <option value="cash">Наличными</option>
+    </select><br><br>
+    <input type="submit" value="Подтвердить">
+        </form>
+
+            <div class="products">
+            <div class="product_type">
+                <img src="/app1/static/img/image.png" alt="">
+                <p>Product type</p>
+            <div class="description">
+                <h2>Product name</h2>
+                <p>Product description</p>
+                <p>Price: 1000</p>
+                <div class="buttons">
+                    <button>add</button>
+                    <div class="amount">10</div>
+                    <button>remove</button>
+                </div>
+                </div>
+            </div>
+
+            <div class="product_type"><img src="/app1/static/img/image.png" alt="">
+                <p>Product type</p>
+            <div class="description">
+                <h2>Product name</h2>
+                <p>Product description</p>
+                <p>Price: 1000</p>
+                <div class="buttons">
+                    <button>add</button>
+                    <div class="amount">10</div>
+                    <button>remove</button>
+                </div>
+            </div>
+            </div>
+            <div class="product_type"><img src="/app1/static/img/image.png" alt="">
+                <p>Product type</p>
+            <div class="description">
+                <h2>Product name</h2>
+                <p>Product description</p>
+                <p>Price: 1000</p>
+                <div class="buttons">
+                    <button>add</button>
+                    <div class="amount">10</div>
+                    <button>remove</button>
+                </div>
+            </div>
+            </div>
+            <div class="product_type"><img src="/app1/static/img/image.png" alt="">
+                <p>Product type</p>
+            <div class="description">
+                <h2>Product name</h2>
+                <p>Product description</p>
+                <p>Price: 1000</p>
+                <div class="buttons">
+                    <button>add</button>
+                    <div class="amount">10</div>
+                    <button>remove</button>
+                </div>
+            </div>
+            </div>
+            <div class="product_type"><img src="/app1/static/img/image.png" alt="">
+                <p>Product type</p>
+            <div class="description">
+                <h2>Product name</h2>
+                <p>Product description</p>
+                <p>Price: 1000</p>
+                <div class="buttons">
+                    <button>add</button>
+                    <div class="amount">10</div>
+                    <button>remove</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        </section>
+</body>
+</html>
