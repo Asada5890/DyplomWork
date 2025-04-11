@@ -1,25 +1,29 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from contextlib import contextmanager
+
 from core.settings import settings
 
-# Для SQLite
-engine = create_async_engine(
-    settings.DATABASE_URL,
-    future=True,
-    connect_args={"check_same_thread": False}
+# SQLite database URL (can be in memory or file-based)
+
+# Create engine
+engine = create_engine(
+    settings.SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False}  # Needed for SQLite
 )
 
-# Для PostgreSQL
-# engine = create_async_engine(settings.DATABASE_URL)
+# Session factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-AsyncSessionLocal = sessionmaker(
-    engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
-
+# Base class for models
 Base = declarative_base()
 
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+
+def init():
+    Base.metadata.create_all(bind=engine)
+
+
+# Database dependency generator
+def get_db():
+    return SessionLocal()

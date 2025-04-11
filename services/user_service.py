@@ -1,20 +1,23 @@
 from typing import Union
 from fastapi import Depends
 from sqlalchemy.orm import Session
+
+from core.security import get_password_hash
+from db.session import get_db
 from models.user import User
-from models.create_user import CreateUser
-from models.userdto import UserDTO
-from database import get_db
-from auth_service import AuthService
-from repositories.user_repository import select_user_by_email
+from services.auth_service import AuthService
+from schemas.user import UserDTO
 
 
-class UserService: # Общий класс пользователей 
-    def __init__(self, db : Session = Depends(get_db), auth_service : AuthService = Depends()):
-        self.db = db 
-        self.auth_service = auth_service
+class UniqueViolation(Exception):
+    pass
 
-    def create_user(self, user_data):
+
+class UserService:  # Общий класс пользователей
+    def __init__(self, db: Session = Depends(get_db)):
+        self.db = db
+
+    def create_user(self, user_data) -> UserDTO:
         """
          Создает пользователя,
            принимает параметр user_data:
@@ -23,27 +26,19 @@ class UserService: # Общий класс пользователей
 
         # Проверка существующего пользователя
         existing_user = self.db.query(User).filter(
-            (User.email == user_data.email) | 
-            (User.phone_number == user_data.phone_number)
+            (User.email == user_data.email)
         ).first()
-        
+
         if existing_user:
-            raise ValueError("User with this email or phone already exists")
-        
+            raise UniqueViolation("User with this email or phone already exists")
+        data_to_orm = user_data.dict()
+        data_to_orm['password'] = get_password_hash(data_to_orm['password'])
         # Создаем нового пользователя
-        db_user = User(**user_data.dict())
+        db_user = User(**data_to_orm)
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)
-        
-        return UserDTO(
-            id=db_user.id,
-            name=db_user.name,
-            surname=db_user.surname,
-            last_name=db_user.last_name,
-            email=db_user.email,
-            phone_number=db_user.phone_number
-        )
+        return UserDTO.from_orm(db_user)
 
     def get_users(self):
         """
@@ -77,32 +72,31 @@ class UserService: # Общий класс пользователей
         регистрация пользователя 
         """
         pass
-    
+
     def login_user(self):
         """
         аунтефикация пользователя 
         """
         pass
 
+    # def validate_user(self, email: str, password: str) -> Union[User, bool]:
+    #     """
+    #     Проверяет, существует ли пользователь с указанными учетными данными.
+    #
+    #     :param email: Электронная почта пользователя.
+    #     :param password: Пароль пользователя.
+    #     :return: Объект User, если учетные данные верны, иначе False.
+    #     """
+    #     user: User = select_user_by_email(email)  # Используем функцию из user_repository для получения пользователя
+    #     if user and user.password == password:  # Проверяем, совпадают ли пароль и email
+    #         return user  # Возвращаем пользователя, если учетные данные верны
+    #     else:
+    #         return False  # Возвращаем False, если учетные данные неверны
 
-
-    def validate_user(self, email: str, password: str) -> Union[User , bool]:
-        """
-        Проверяет, существует ли пользователь с указанными учетными данными.
-
-        :param email: Электронная почта пользователя.
-        :param password: Пароль пользователя.
-        :return: Объект User, если учетные данные верны, иначе False.
-        """
-        user: User = select_user_by_email(email)  # Используем функцию из user_repository для получения пользователя
-        if user and user.password == password:  # Проверяем, совпадают ли пароль и email
-            return user  # Возвращаем пользователя, если учетные данные верны
-        else:
-            return False  # Возвращаем False, если учетные данные неверны
     # def login_history(self):
 
-    def select_user_by_email(db: Session, email: str) -> User:
-        """
-        поиск пользователя по почте
-        """
-        return db.query(User).filter(User.email == email).first()
+    # def select_user_by_email(db: Session, email: str) -> User:
+    #     """
+    #     поиск пользователя по почте
+    #     """
+    #     return db.query(User).filter(User.email == email).first()

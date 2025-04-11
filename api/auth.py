@@ -1,30 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from db.session import get_db
-from schemas.user import UserCreate, UserResponse
-from models.user import User
-from core.security import get_password_hash
+from fastapi import APIRouter, HTTPException, Depends
+from schemas.auth import Token
+from schemas.user import UserCreate
+from services.auth_service import AuthService
+from services.user_service import UserService, UniqueViolation
 
 router = APIRouter()
 
-@router.post("/register", response_model=UserResponse)
-async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    # Проверка существования пользователя
-    existing_user = await db.execute(select(User).where(User.email == user.email))
-    if existing_user.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    hashed_password = get_password_hash(user.password)
-    db_user = User(
-        email=user.email,
-        hashed_password=hashed_password,
-        name=user.name,
-        sur_name=user.sur_name,
-        last_name=user.last_name,
-        phone_number=user.phone_number
-    )
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
+
+@router.post("/register", response_model=Token)
+def register(user_data: UserCreate,
+             auth_service: AuthService = Depends(),
+             user_service: UserService = Depends()) -> Token:
+    try:
+        user = user_service.create_user(user_data)
+        return auth_service.register(user)
+    except (UniqueViolation,) as error:
+        raise HTTPException(detail=str(error), status_code=400)
+
+# TODO:
+# @router.post("/login", response_model=UserResponse)
+# @router.post("/logout", response_model=UserResponse)
+# @router.post("/me", response_model=UserResponse)

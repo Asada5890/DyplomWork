@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta, timezone
-from typing import Union
+from datetime import datetime, timezone, timedelta
 import jwt
-from models.token import Token
+
+from core.settings import settings
 from models.user import User
-from repositories.user_repository import select_user_by_email  # Импортируем функцию для выборки пользователя по email
-from fastapi import HTTPException, status
-import core.settings as settings  # Импортируем настройки
+from schemas.auth import AuthSub, Token
+from schemas.user import UserDTO
+
 
 class UserNotFound(Exception):
     """
@@ -19,7 +19,7 @@ class AuthService:
     Класс для аутентификации пользователей и работы с токенами доступа.
     """
 
-    def create_access_token(self, data: dict, ) -> str:
+    def create_access_token(self, data: AuthSub, ) -> str:
         """
         Создает JWT токен доступа.
 
@@ -27,25 +27,24 @@ class AuthService:
         :param expires_delta: Время жизни токена (timedelta).
         :return: Закодированный JWT токен в виде строки.
         """
-        to_encode = data.copy()  # Копируем данные для кодирования
-        expire = datetime.now(timezone.utc) + settings.EXPIRES_DELTA  # Устанавливаем время истечения токена
-        to_encode.update({"exp": expire})  # Добавляем время истечения в данные токена
-        encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)  # Кодируем токен
-        return encoded_jwt
+        data_to_encode = data.dict()
+        data_to_encode.update({'exp': datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)})
+        return jwt.encode(
+            data_to_encode,
+            settings.SECRET_KEY,  # JH9pfiY86p
+            headers={'alg': settings.JWT_ALGORITHM, 'typ': 'JWT'}
+        )
 
-    def decode_token(self, token: str):
-        """
-        Декодирует JWT токен и возвращает его содержимое.
+    def create_refresh_token(self, data: AuthSub):
+        data_to_encode = data.dict()
+        data_to_encode.update({'exp': datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRES_DAYS)})
+        return jwt.encode(
+            data_to_encode,
+            settings.SECRET_KEY,
+            headers={'alg': settings.JWT_ALGORITHM, 'typ': 'JWT'}
+        )
 
-        :param token: JWT токен в виде строки.
-        :return: Декодированные данные токена.
-        """
-        # TODO: Реализовать декодирование токена
-        pass
-
-
-
-    def login_for_access_token(self, email: str, password: str) -> Token:
+    def login(self, user) -> Token:
         """
         Проверяет учетные данные пользователя и создает токен доступа.
 
@@ -54,8 +53,7 @@ class AuthService:
         :return: Объект Token с токеном доступа и его типом.
         :raises HTTPException: Если учетные данные неверны.
         """
-        user: User = self.validate_user(email, password)  # Проверка введенных данных
-      
+
         if not user:
             raise UserNotFound(
                 "Личная ошибка"
@@ -65,3 +63,9 @@ class AuthService:
             data={"email": user.email, "password": user.password},  # Данные для токена
         )
         return Token(access_token=access_token, token_type="bearer", access_token_expires=str(settings.EXPIRES_DELTA))
+
+    def register(self, user: UserDTO) -> Token:
+        access_token = self.create_access_token(AuthSub(**user.model_dump()))  # or user_id
+        refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))  # or user_id
+
+        return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
