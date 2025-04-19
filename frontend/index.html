@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СтройМаркет - Магазин строительных материалов</title>
+    <style>
+        /* Базовые стили */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка */
+        header {
+            background: #2c3e50;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #3498db;
+        }
+
+        /* Основной контент */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        /* Карточка товара */
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+        }
+
+        .product-price {
+            color: #27ae60;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .cart-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cart-btn.added {
+            background: #7f8c8d;
+            cursor: default;
+        }
+
+        /* Футер */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        /* Баннер */
+        .banner {
+            background: #3498db;
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+        }
+
+        .banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .product-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="#" class="logo">СтройМаркет</a>
+            <div class="nav-menu">
+                <a href="#" class="nav-link">Каталог</a>
+                <a href="#" class="nav-link">Акции</a>
+                <a href="#" class="nav-link">Доставка</a>
+                <a href="#" class="nav-link">Контакты</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="banner">
+            <h1>Строительные материалы по лучшим ценам</h1>
+            <p>Более 5000 товаров в наличии</p>
+        </div>
+
+        <div class="products-grid">
+            <!-- Карточка товара 1 -->
+            <div class="product-card">
+                <img src="image.png" alt="Кирпич" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Кирпич строительный</h3>
+                    <p class="product-price">245₽/шт</p>
+                    <button class="cart-btn">В корзину</button>
+                </div>
+            </div>
+
+            <!-- Карточка товара 2 -->
+            <div class="product-card">
+                <img src="image.png" alt="Плитка" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Керамическая плитка</h3>
+                    <p class="product-price">1 850₽/м²</p>
+                    <button class="cart-btn">В корзину</button>
+                </div>
+            </div>
+
+            <!-- Карточка товара 3 -->
+            <div class="product-card">
+                <img src="image.png" alt="Цемент" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Цемент М500</h3>
+                    <p class="product-price">450₽/мешок</p>
+                    <button class="cart-btn">В корзину</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>Телефон: +7 (495) 123-45-67</p>
+                <p>Email: info@stroymarket.ru</p>
+            </div>
+            <div class="footer-section">
+                <h3>Адрес</h3>
+                <p>г. Москва, ул. Строителей, 15</p>
+                <p>Ежедневно с 9:00 до 21:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Соцсети</h3>
+                <p>VKontakte</p>
+                <p>Telegram</p>
+                <p>WhatsApp</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Логика корзины
+        document.querySelectorAll('.cart-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.add('added');
+                this.textContent = 'Добавлено';
+                this.disabled = true;
+            });
+        });
+
+        // Переход на страницу товара
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', () => {
+                window.location.href = 'product.html';
+            });
+        });
+    </script>
+</body>
+</html>

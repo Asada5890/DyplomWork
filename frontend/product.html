@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница товара</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 2rem;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .product-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .product-content {
+            padding: 2rem;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            color: #4CAF50;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-description {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .add-to-cart {
+            padding: 1rem 2rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .add-to-cart.added {
+            background: #607D8B;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+    <a href="test.html" class="back-btn">← Назад</a>
+    
+    <div class="product-container">
+        <img src="image.png" class="product-img" alt="Товар">
+        <div class="product-content">
+            <h1 class="product-title">Название товара</h1>
+            <p class="product-price">Цена: 0₽</p>
+            <p class="product-description">Описание товара...</p>
+            <button class="add-to-cart">Добавить в корзину</button>
+        </div>
+    </div>
+
+    <script>
+        // Получение данных товара
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Пример данных товаров
+        const products = {
+            1: {
+                title: 'Кирпич облицовочный',
+                price: '245₽/шт',
+                description: 'Высококачественный керамический кирпич для облицовки фасадов. Морозостойкость F100, водопоглощение менее 6%.',
+                img: 'https://source.unsplash.com/random/800x600?brick'
+            },
+            2: {
+                title: 'Керамическая плитка',
+                price: '1 850₽/м²',
+                description: 'Напольная плитка повышенной износостойкости (класс PEI IV). Размер 30x30 см, толщина 8 мм.',
+                img: 'image.png'
+            }
+        };
+
+        // Заполнение данных
+        if (products[productId]) {
+            document.title = products[productId].title;
+            document.querySelector('.product-img').src = products[productId].img;
+            document.querySelector('.product-title').textContent = products[productId].title;
+            document.querySelector('.product-price').textContent = `Цена: ${products[productId].price}`;
+            document.querySelector('.product-description').textContent = products[productId].description;
+        }
+
+        // Обработчик кнопки корзины
+        document.querySelector('.add-to-cart').addEventListener('click', function() {
+            this.classList.add('added');
+            this.textContent = 'Добавлено в корзину';
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>

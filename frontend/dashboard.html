@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <h2>Добро пожаловать!</h2>
+        <button onclick="logout()">Выйти</button>
+    </div>
+    <script>
+        // Проверка авторизации
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'index.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
