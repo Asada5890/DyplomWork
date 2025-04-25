@@ -195,37 +195,30 @@
             <h1>Строительные материалы по лучшим ценам</h1>
             <p>Более 5000 товаров в наличии</p>
         </div>
-
         <div class="products-grid">
-            <!-- Карточка товара 1 -->
-            <div class="product-card">
-                <img src="image.png" alt="Кирпич" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">Кирпич строительный</h3>
-                    <p class="product-price">245₽/шт</p>
-                    <button class="cart-btn">В корзину</button>
+            {% for product in products %}
+                <div class="product-card" onclick="window.location.href='/product/ {{ product._id }} '">
+                    {% if product.images and product.images[0] %}
+                        <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-image">
+                    {% else %}
+                        <div class="product-image" style="display: flex; align-items: center; justify-content: center; background: #e0e0e0; color: #555; font-weight: bold; font-size: 1rem; height: 200px;">
+                            Нет фотографии
+                        </div>
+                    {% endif %}
+                    <div class="product-info">
+                        <h3 class="product-title">{{ product.name }}</h3>
+                        <p class="product-price">
+                            {{ product.base_price if product.base_price else "Цена по запросу" }} ₽
+                        </p>
+                        <p style="font-size: 0.9rem; color: #7f8c8d;">
+                            Категория: {{ product.category }}<br>
+                            Бренд: {{ product.brand }}
+                        </p>
+                        <button class="cart-btn">В корзину</button>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Карточка товара 2 -->
-            <div class="product-card">
-                <img src="image.png" alt="Плитка" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">Керамическая плитка</h3>
-                    <p class="product-price">1 850₽/м²</p>
-                    <button class="cart-btn">В корзину</button>
-                </div>
-            </div>
-
-            <!-- Карточка товара 3 -->
-            <div class="product-card">
-                <img src="image.png" alt="Цемент" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">Цемент М500</h3>
-                    <p class="product-price">450₽/мешок</p>
-                    <button class="cart-btn">В корзину</button>
-                </div>
-            </div>
+            {% endfor %}
+        </div>
         </div>
     </main>
 
@@ -261,12 +254,7 @@
             });
         });
 
-        // Переход на страницу товара
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('click', () => {
-                window.location.href = 'product.html';
-            });
-        });
+
     </script>
 </body>
 </html>

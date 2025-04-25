@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Страница товара</title>
+    <title>{{ product.name }}</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background: #f5f5f5;
@@ -43,6 +39,18 @@
             width: 100%;
             height: 400px;
             object-fit: cover;
+        }
+
+        .no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 400px;
+            background: #ddd;
+            color: #777;
+            font-size: 1.5rem;
+            font-style: italic;
         }
 
         .product-content {
@@ -82,57 +90,69 @@
             background: #607D8B;
             cursor: default;
         }
+
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        .variant {
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
-    <a href="test.html" class="back-btn">← Назад</a>
-    
+    <a href="/" class="back-btn">← Назад</a>
     <div class="product-container">
-        <img src="image.png" class="product-img" alt="Товар">
+        {% if product.images and product.images|length > 0 %}
+            <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-img">
+        {% else %}
+            <div class="no-image">Нет фотографии</div>
+        {% endif %}
+
         <div class="product-content">
-            <h1 class="product-title">Название товара</h1>
-            <p class="product-price">Цена: 0₽</p>
-            <p class="product-description">Описание товара...</p>
-            <button class="add-to-cart">Добавить в корзину</button>
+            <h1 class="product-title">{{ product.name }}</h1>
+
+            {% if product.base_price %}
+                <p class="product-price">{{ product.base_price }} ₽</p>
+            {% endif %}
+
+            {% if product.description %}
+                <p class="product-description">{{ product.description }}</p>
+            {% endif %}
+
+            <div class="attributes">
+                {% if product.category == 'laminate' %}
+                    <p>Толщина: {{ product.attributes.thickness }} мм</p>
+                    <p>Класс износостойкости: {{ product.attributes.wear_class }}</p>
+                    <p>Тип соединения: {{ product.attributes.connection_type }}</p>
+                {% elif product.category == 'tile' %}
+                    <p>Размер: {{ product.attributes.size }}</p>
+                    <p>Поверхность: {{ product.attributes.surface }}</p>
+                    <p>Назначение: {{ product.attributes.purpose|join(', ') }}</p>
+                {% elif product.category == 'paint' %}
+                    <p>Тип: {{ product.attributes.type }}</p>
+                    <p>Цвет: <span class="color-box" style="background: {{ product.attributes.color }}"></span></p>
+                    <p>Расход: {{ product.attributes.consumption }} м²/л</p>
+                    <div class="volume-variants">
+                        {% for variant in product.volume_variations %}
+                        <div class="variant">
+                            {{ variant.volume }} л — {{ variant.price }} ₽ (в наличии: {{ variant.stock }})
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <form action="/cart/add" method="post" style="margin-top: 2rem;">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <button type="submit" class="add-to-cart">Добавить в корзину</button>
+            </form>
         </div>
     </div>
-
-    <script>
-        // Получение данных товара
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-
-        // Пример данных товаров
-        const products = {
-            1: {
-                title: 'Кирпич облицовочный',
-                price: '245₽/шт',
-                description: 'Высококачественный керамический кирпич для облицовки фасадов. Морозостойкость F100, водопоглощение менее 6%.',
-                img: 'https://source.unsplash.com/random/800x600?brick'
-            },
-            2: {
-                title: 'Керамическая плитка',
-                price: '1 850₽/м²',
-                description: 'Напольная плитка повышенной износостойкости (класс PEI IV). Размер 30x30 см, толщина 8 мм.',
-                img: 'image.png'
-            }
-        };
-
-        // Заполнение данных
-        if (products[productId]) {
-            document.title = products[productId].title;
-            document.querySelector('.product-img').src = products[productId].img;
-            document.querySelector('.product-title').textContent = products[productId].title;
-            document.querySelector('.product-price').textContent = `Цена: ${products[productId].price}`;
-            document.querySelector('.product-description').textContent = products[productId].description;
-        }
-
-        // Обработчик кнопки корзины
-        document.querySelector('.add-to-cart').addEventListener('click', function() {
-            this.classList.add('added');
-            this.textContent = 'Добавлено в корзину';
-            this.disabled = true;
-        });
-    </script>
 </body>
 </html>
