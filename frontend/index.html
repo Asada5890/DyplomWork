@@ -197,7 +197,8 @@
         </div>
         <div class="products-grid">
             {% for product in products %}
-                <div class="product-card" onclick="window.location.href='/product/ {{ product._id }} '">
+            <div class="product-card" onclick="window.location.href='/products/product/{{ product._id }}'">
+
                     {% if product.images and product.images[0] %}
                         <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-image">
                     {% else %}

@@ -20,8 +20,7 @@ class Settings(BaseSettings):
     MONGODB_URL: str = "localhost"
     MONGODB_PORT: int = 27017
     MONGODB_DB_NAME: str = "laminate_store"
-    MONGODB_COLLECTION_NAME: str = "products"
-
+    MONGODB_COLLECTION_PRODUCTS: str = "products"
 
 
     class Config:
