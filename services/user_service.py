@@ -42,19 +42,26 @@ class UserService:  # Общий класс пользователей
         self.db.refresh(db_user)
         return UserDTO.from_orm(db_user)
 
-    def get_users(self):
+    def get_all_users(self):
         """
         Отдает всех пользователей
         """
-        pass
-
-    def get_user_by_id(self):
+        users = self.db.query(User).all()
+        return [UserDTO.from_orm(user) for user in users]
+        
+    def get_users_count(self):
+        """
+        Возвращает количество пользователей
+        """
+        return self.db.query(User).count()
+    def get_user_by_id(self, user_id):
         """
         Возвращает пользователя по id 
         """
-        pass
+        return self.db.query(User).filter(User.id == user_id).first()
+        
 
-    def update_user(self, user_id, user_data):
+    def update_user_by_user(self, user_id, user_data):
         """
         Изменяет данные пользователя 
         user_id - принимает id пользователя для которого хотим применить изменения 
@@ -84,6 +91,52 @@ class UserService:  # Общий класс пользователей
             return UserDTO.from_orm(existing_user)
         else:
             raise UserDoesNotExist
+
+    # Взаимодействие админа с пользователями
+    def admin_change_user_data(self, user_id, username, surname, email, password=None):
+        """
+        Изменение данных пользователя админом.
+        Если пароль не передан, он не будет обновлен.
+        """
+        try:
+            # Создаем словарь с обновленными данными
+            user_data = {"name": username, "surname": surname, "email": email}
+            
+            # Если передан новый пароль, добавляем его в данные для обновления
+            if password:
+                user_data["password"] = password
+
+            # Выполняем обновление в базе данных
+            result = self.db.query(User).filter(User.id == user_id).update(user_data)
+            
+            # Сохраняем изменения
+            self.db.commit()
+
+            return True
+        except Exception as e:
+            print("Ошибка обновления пользователя: " + str(e))
+            self.db.rollback()  # Откат транзакции в случае ошибки
+            return False
+
+
+
+    def admin_delete_user(self, user_id):
+        """
+        Удаление пользователя админом
+        """
+        try:
+            result = self.db.query(User).filter(User.id == user_id).delete()
+
+            self.db.commit()  
+
+            if result:
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.db.rollback()  
+            print("Ошибка удаления пользователя: " + str(e))
+            return False
         
    
 

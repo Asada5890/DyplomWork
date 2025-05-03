@@ -132,7 +132,7 @@
 
     <div class="auth-container">
         <h1 class="auth-title">Вход в аккаунт</h1>
-        <form id="loginForm">
+        <form id="loginForm" method="POST" action="/auth/login">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" required>
@@ -149,39 +149,5 @@
         <div id="message"></div>
     </div>
 
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            
-            const data = {
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value
-            };
-
-            const messageEl = document.getElementById("message");
-            messageEl.className = '';
-            
-            try {
-                const response = await fetch('http://localhost:8000/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                if (response.ok) {
-                    messageEl.textContent = "Вход выполнен успешно!";
-                    messageEl.classList.add('success');
-                    setTimeout(() => window.location.href = 'dashboard.html', 1500);
-                } else {
-                    const error = await response.json();
-                    messageEl.textContent = error.detail;
-                    messageEl.classList.add('error');
-                }
-            } catch (err) {
-                messageEl.textContent = "Ошибка соединения с сервером";
-                messageEl.classList.add('error');
-            }
-        });
-    </script>
 </body>
 </html>
