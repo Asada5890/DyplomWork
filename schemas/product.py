@@ -1,11 +1,13 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl, Field
+from typing import Optional
+from uuid import uuid4
 
-class Product(BaseModel): # Валидация данных для продукта 
-    id: int 
+class Product(BaseModel): # Валидация данных для продуктов
+    sku: str = Field(default_factory=lambda: str(uuid4()))  # Генерация уникального SKU
     name: str
-    description: str
+    articul: str
     price: float
-    category_id: int
-
-    class Config:
-        orm_mode = True
+    category: str
+    brand: str | None  # Значение по умолчанию
+    img: Optional[str] = None
+    description: Optional[str] = ""

@@ -1,5 +1,5 @@
 # Импорты FastAPI 
-from fastapi import FastAPI, Request, HTTPException, APIRouter
+from fastapi import FastAPI, Request, HTTPException, APIRouter,Depends
 from bson.errors import InvalidId
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -15,20 +15,25 @@ router = APIRouter()
 
 collection = products
 
-@router.get("/", response_class=HTMLResponse, tags="")
-def read_products(request: Request):
-    products = ProductService().get_all_products()
+@router.get("/", response_class=HTMLResponse,tags="")
+def read_products(request: Request,
+                  product_service: ProductService = Depends()
+                    ):
+    products =  product_service.get_all_products()
+    categories =  product_service.get_all_categories()
     for product in products:
         product["_id"] = str(product["_id"])
 
     return templates.TemplateResponse("index.html", {
         "request": request,
         "products": products,
+        "categories": categories
     })
 
 
 @router.get("/product/{product_id}", response_class=HTMLResponse)
-def product_detail(request: Request, product_id: str):
+def product_detail(request: Request,
+                    product_id: str):
     try:
         # Конвертируем строку в ObjectId
         obj_id = ObjectId(product_id)
@@ -48,3 +53,14 @@ def product_detail(request: Request, product_id: str):
         "product.html",
         {"request": request, "product": product}
     )
+
+
+
+@router.get("/category/{category_name}")
+def category_products(request: Request, category_name: str):
+    products = ProductService().get_products_by_category(category_name)
+    return templates.TemplateResponse("category.html", {
+        "request": request,
+        "products": products,
+        "category": category_name
+    })

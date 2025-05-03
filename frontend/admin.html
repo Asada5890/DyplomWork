@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель — Добавить товар</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #f5f5f5;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 2rem;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            padding: 1rem 2rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+
+        .message {
+            margin-top: 1rem;
+            color: green;
+            font-weight: 600;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-btn">← Назад</a>
+
+    <div class="form-container">
+        <h1 class="form-title">Добавить новый товар</h1>
+
+        <form action="/admin/add-product" method="post">
+            <label for="name">Название</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="articul">Артикул</label>
+            <input type="text" id="articul" name="articul" required>
+
+            <label for="price">Цена</label>
+            <input type="number" step="0.01" id="price" name="price" required>
+
+            <label for="category">Категория</label>
+            <input type="text" id="category" name="category" required>
+            <label for="brand">Бренд</label>
+            <input type="text" id="brand" name="brand" required>
+
+            <label for="img">Ссылка на изображение</label>
+            <input type="text" id="img" name="img">
+
+            <label for="description">Описание</label>
+            <textarea id="description" name="description"></textarea>
+
+            <button class="submit-btn" type="submit">Сохранить</button>
+        </form>
+
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

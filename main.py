@@ -32,16 +32,16 @@
 
 
 
-from fastapi import FastAPI
 from fastapi import FastAPI, Request, HTTPException
+from fastapi.staticfiles import StaticFiles
 from bson.errors import InvalidId
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-from api import auth,product
+from api import auth,product, admin
 from db.session import init
-from api import product
+
 
 
 app = FastAPI(
@@ -50,6 +50,7 @@ app = FastAPI(
     openapi_url='/api/openapi.json',
 )
 
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
 # Сначала добавляем CORS middleware
 app.add_middleware(
@@ -62,14 +63,14 @@ app.add_middleware(
 
 # Затем подключаем роутеры
 
-app.include_router(auth.router, prefix='/auth', tags=["auth"])
-app.include_router(product.router, prefix='/products', tags=["products"])
+app.include_router(auth.router, prefix='/auth', tags=["auth"]) # Ауентификация
+app.include_router(product.router, prefix='/products', tags=["products"]) # Продукты
+app.include_router(admin.router, prefix='', tags=["admin"]) # Админка
 
 
 
 # Инициализация БД
 init()
-
 
 
 if __name__ == "__main__":

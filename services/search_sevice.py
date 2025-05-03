@@ -5,7 +5,7 @@ class SearchService:
         """
         поиск продукта по id 
         """
-        def finde_product_by_title(self):
-            """
-        поиск продукта по названию
+    def finde_product_by_title(self):
         """
+    поиск продукта по названию
+    """
