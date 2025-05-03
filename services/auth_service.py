@@ -1,6 +1,5 @@
 from datetime import datetime, timezone, timedelta
 import jwt
-
 from core.settings import settings
 from models.user import User
 from schemas.auth import AuthSub, Token
@@ -43,8 +42,7 @@ class AuthService:
             settings.SECRET_KEY,
             headers={'alg': settings.JWT_ALGORITHM, 'typ': 'JWT'}
         )
-
-    def login(self, user) -> Token:
+    def login(self, user:UserDTO ) -> Token:
         """
         Проверяет учетные данные пользователя и создает токен доступа.
 
@@ -53,16 +51,10 @@ class AuthService:
         :return: Объект Token с токеном доступа и его типом.
         :raises HTTPException: Если учетные данные неверны.
         """
+        access_token = self.create_access_token(AuthSub(**user.model_dump()))  # or user_id
+        refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))  # or user_id
 
-        if not user:
-            raise UserNotFound(
-                "Личная ошибка"
-            )
-
-        access_token = self.create_access_token(
-            data={"email": user.email, "password": user.password},  # Данные для токена
-        )
-        return Token(access_token=access_token, token_type="bearer", access_token_expires=str(settings.EXPIRES_DELTA))
+        return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
 
     def register(self, user: UserDTO) -> Token:
         access_token = self.create_access_token(AuthSub(**user.model_dump()))  # or user_id

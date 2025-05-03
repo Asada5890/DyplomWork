@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
-from schemas.auth import Token
-from schemas.user import UserCreate
+from schemas.auth import Token, UserResponse
+from schemas.user import UserCreate, UserLogin
 from services.auth_service import AuthService
-from services.user_service import UserService, UniqueViolation
+from services.user_service import UserDoesNotExist, UserService, UniqueViolation
 
 router = APIRouter()
 
@@ -17,7 +17,16 @@ def register(user_data: UserCreate,
     except (UniqueViolation,) as error:
         raise HTTPException(detail=str(error), status_code=400)
 
+@router.post("/login", response_model=Token)
+def login(user_data: UserLogin,
+          user_service: UserService = Depends(),
+          auth_service:AuthService  = Depends()) -> Token:
+    try:
+        user = user_service.get_user(user_data)
+        return auth_service.login(user)
+    except UserDoesNotExist:
+        raise HTTPException(status_code=401, detail="Не правильный логин или пароль") 
+
 # TODO:
-# @router.post("/login", response_model=UserResponse)
 # @router.post("/logout", response_model=UserResponse)
 # @router.post("/me", response_model=UserResponse)

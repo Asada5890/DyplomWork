@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserBase(BaseModel):
@@ -22,3 +22,8 @@ class UserDTO(BaseModel):
     name: str
     surname: str
     email: str
+
+
+class UserLogin(BaseModel):
+    email: EmailStr = Field(..., description = "Электронная почта")
+    password: str = Field(..., description = "Пароль")  

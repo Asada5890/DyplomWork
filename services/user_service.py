@@ -2,16 +2,18 @@ from typing import Union
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from core.security import get_password_hash
+from core.security import get_password_hash, verify_password
 from db.session import get_db
 from models.user import User
 from services.auth_service import AuthService
-from schemas.user import UserDTO
+from schemas.user import UserDTO, UserLogin
 
 
 class UniqueViolation(Exception):
     pass
 
+class UserDoesNotExist(Exception):
+    pass
 
 class UserService:  # Общий класс пользователей
     def __init__(self, db: Session = Depends(get_db)):
@@ -72,12 +74,19 @@ class UserService:  # Общий класс пользователей
         регистрация пользователя 
         """
         pass
-
-    def login_user(self):
+    def get_user(self, user_data:UserLogin):
         """
         аунтефикация пользователя 
         """
-        pass
+        existing_user = self.db.query(User).filter(
+            User.email == user_data.email).first()
+        if existing_user and verify_password(user_data.password, existing_user.password):
+            return UserDTO.from_orm(existing_user)
+        else:
+            raise UserDoesNotExist
+        
+   
+
 
     # def validate_user(self, email: str, password: str) -> Union[User, bool]:
     #     """
