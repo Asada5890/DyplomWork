@@ -20,7 +20,6 @@
             flex-direction: column;
         }
 
-        /* Шапка */
         header {
             background: #2c3e50;
             padding: 1rem 2rem;
@@ -60,7 +59,6 @@
             color: #3498db;
         }
 
-        /* Основной контент */
         main {
             flex: 1;
             padding: 2rem;
@@ -69,7 +67,6 @@
             width: 100%;
         }
 
-        /* Стили корзины */
         .cart-container {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -242,21 +239,6 @@
             margin-bottom: 1rem;
             color: #3498db;
         }
-
-        /* Баннер */
-        .banner {
-            background: #3498db;
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            border-radius: 12px;
-        }
-
-        .banner h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -280,14 +262,36 @@
 
         <div class="cart-container" id="cartContainer">
             <div class="cart-items" id="cartItems">
-                <!-- Товары будут добавлены через JavaScript -->
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                        <div class="cart-item">
+                            <img src="{{ item.product_img }}" class="cart-item-img" alt="{{ item.product_name }}">
+                            <div class="cart-item-info">
+                                <h3>{{ item.product_name }}</h3>
+                                <p>{{ item.product_description }}</p>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn">-</button>
+                                    <span>{{ item.quantity }}</span>
+                                    <button class="quantity-btn">+</button>
+                                </div>
+                                <button class="remove-btn">Удалить</button>
+                            </div>
+                            <span>₽{{ item.price }}</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-cart" id="emptyCart">
+                        <h2>Ваша корзина пуста</h2>
+                        <p>Посмотрите наши <a href="#">акционные предложения</a> или перейдите в <a href="#">каталог</a></p>
+                    </div>
+                {% endif %}
             </div>
 
             <div class="order-summary">
                 <h2>Итого</h2>
                 <div class="summary-item">
-                    <span>Товары (<span id="totalCount">0</span>)</span>
-                    <span>₽<span id="totalPrice">0</span></span>
+                    <span>Товары (<span id="totalCount">{{ total_count }}</span>)</span>
+                    <span>₽<span id="totalPrice">{{ total_price }}</span></span>
                 </div>
                 <div class="summary-item">
                     <span>Доставка</span>
@@ -295,15 +299,10 @@
                 </div>
                 <div class="summary-item total-price">
                     <span>Всего</span>
-                    <span>₽<span id="totalWithDelivery">0</span></span>
+                    <span>₽<span id="totalWithDelivery">{{ total_with_delivery }}</span></span>
                 </div>
                 <button class="checkout-btn">Перейти к оформлению</button>
             </div>
-        </div>
-
-        <div class="empty-cart" id="emptyCart" style="display: none;">
-            <h2>Ваша корзина пуста</h2>
-            <p>Посмотрите наши <a href="#">акционные предложения</a> или перейдите в <a href="#">каталог</a></p>
         </div>
     </main>
 
@@ -325,7 +324,5 @@
             </div>
         </div>
     </footer>
-
-
 </body>
 </html>

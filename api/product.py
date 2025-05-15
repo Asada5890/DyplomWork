@@ -8,6 +8,7 @@ from bson import ObjectId
 from db.mongo import products
 from services.product_service import ProductService
 import frontend
+from core.security import get_current_user
 # Определение шаблонов
 templates = Jinja2Templates(directory="frontend")
 
@@ -17,7 +18,8 @@ collection = products
 
 @router.get("/", response_class=HTMLResponse,tags="")
 def read_products(request: Request,
-                  product_service: ProductService = Depends()
+                  product_service: ProductService = Depends(),
+                  current_user: dict = Depends(get_current_user)
                     ):
     products =  product_service.get_all_products()
     categories =  product_service.get_all_categories()
@@ -27,7 +29,8 @@ def read_products(request: Request,
     return templates.TemplateResponse("index.html", {
         "request": request,
         "products": products,
-        "categories": categories
+        "categories": categories,
+        "user": current_user
     })
 
 
@@ -64,3 +67,5 @@ def category_products(request: Request, category_name: str):
         "products": products,
         "category": category_name
     })
+
+

@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     MONGODB_PORT: int = 27017
     MONGODB_DB_NAME: str = "laminate_store"
     MONGODB_COLLECTION_PRODUCTS: str = "products"
+    MONGODB_COLLECTION_СARTS: str = "carts"
     
 
 

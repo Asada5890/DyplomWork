@@ -3,6 +3,8 @@ from pydantic import BaseModel
 
 class AuthSub(BaseModel):
     id: int
+    email: str  
+    role: str    
 
 
 class Token(BaseModel):

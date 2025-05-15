@@ -132,21 +132,25 @@
 
     <div class="auth-container">
         <h1 class="auth-title">Вход в аккаунт</h1>
-        <form id="loginForm" method="POST" action="/auth/login">
+        <form id="loginForm" method="POST" action="/login">
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" required>
+                <input type="email" name="email" id="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Пароль:</label>
-                <input type="password" id="password" required>
+                <input type="password" name="password" id="password" required>
             </div>
             <button type="submit">Войти</button>
         </form>
         <div class="auth-links">
-            <a href="register.html" class="auth-link">Нет аккаунта? Зарегистрироваться</a>
+            <a href="/register" class="auth-link">Нет аккаунта? Зарегистрироваться</a>
         </div>
-        <div id="message"></div>
+        {% if error %}
+    <div id="message" class="error">
+        {{ error }}
+    </div>
+    {% endif %}
     </div>
 
 </body>

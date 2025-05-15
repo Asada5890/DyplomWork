@@ -191,9 +191,9 @@
                         <td>{{ user.email }}</td>
                         {% if user.role == 'admin' %}
                         <td>Администратор</td>
-                    {% elif user.role == 'user' %}
+                        {% elif user.role == 'user' %}
                         <td>Пользователь</td>
-                    {% else %}
+                        {% else %}
                         <td>Неизвестно</td>
                     {% endif %}
                         <td>

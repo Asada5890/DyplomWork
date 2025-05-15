@@ -32,7 +32,7 @@ class UserService:  # Общий класс пользователей
         ).first()
 
         if existing_user:
-            raise UniqueViolation("User with this email or phone already exists")
+            raise UniqueViolation("Пользователь с таким email или номером телефона уже существует")
         data_to_orm = user_data.dict()
         data_to_orm['password'] = get_password_hash(data_to_orm['password'])
         # Создаем нового пользователя
@@ -92,6 +92,7 @@ class UserService:  # Общий класс пользователей
         else:
             raise UserDoesNotExist
 
+
     # Взаимодействие админа с пользователями
     def admin_change_user_data(self, user_id, username, surname, email, password=None):
         """
@@ -138,27 +139,27 @@ class UserService:  # Общий класс пользователей
             print("Ошибка удаления пользователя: " + str(e))
             return False
         
-   
+    def select_user_by_email(db: Session, email: str) -> User:
+        """
+        поиск пользователя по почте
+        """
+        return db.query(User).filter(User.email == email).first()
 
 
-    # def validate_user(self, email: str, password: str) -> Union[User, bool]:
-    #     """
-    #     Проверяет, существует ли пользователь с указанными учетными данными.
-    #
-    #     :param email: Электронная почта пользователя.
-    #     :param password: Пароль пользователя.
-    #     :return: Объект User, если учетные данные верны, иначе False.
-    #     """
-    #     user: User = select_user_by_email(email)  # Используем функцию из user_repository для получения пользователя
-    #     if user and user.password == password:  # Проверяем, совпадают ли пароль и email
-    #         return user  # Возвращаем пользователя, если учетные данные верны
-    #     else:
-    #         return False  # Возвращаем False, если учетные данные неверны
+    def validate_user(self, email: str, password: str) -> Union[User, bool]:
+        """
+        Проверяет, существует ли пользователь с указанными учетными данными.
+    
+        :param email: Электронная почта пользователя.
+        :param password: Пароль пользователя.
+        :return: Объект User, если учетные данные верны, иначе False.
+        """
+        user: User = self.select_user_by_email(email)  # Используем функцию из user_repository для получения пользователя
+        if user and user.password == password:  # Проверяем, совпадают ли пароль и email
+            return user  # Возвращаем пользователя, если учетные данные верны
+        else:
+            return False  # Возвращаем False, если учетные данные неверны
 
     # def login_history(self):
 
-    # def select_user_by_email(db: Session, email: str) -> User:
-    #     """
-    #     поиск пользователя по почте
-    #     """
-    #     return db.query(User).filter(User.email == email).first()
+   

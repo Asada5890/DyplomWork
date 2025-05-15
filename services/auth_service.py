@@ -56,7 +56,7 @@ class AuthService:
 
         return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
 
-    def register(self, user: UserDTO) -> Token:
+    async def register(self, user: UserDTO) -> Token:
         access_token = self.create_access_token(AuthSub(**user.model_dump()))  # or user_id
         refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))  # or user_id
 

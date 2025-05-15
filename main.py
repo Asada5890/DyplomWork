@@ -39,7 +39,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-from api import auth,product, admin
+from api import auth,product, admin,cart
 from db.session import init
 
 
@@ -55,7 +55,7 @@ app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 # Сначала добавляем CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:8000"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
@@ -63,9 +63,10 @@ app.add_middleware(
 
 # Затем подключаем роутеры
 
-app.include_router(auth.router, prefix='/auth', tags=["auth"]) # Ауентификация
-app.include_router(product.router, prefix='/products', tags=["products"]) # Продукты
+app.include_router(auth.router, prefix='', tags=["auth"]) # Ауентификация
+app.include_router(product.router, prefix='', tags=["products"]) # Продукты
 app.include_router(admin.router, prefix='', tags=["admin"]) # Админка
+# app.include_router(cart.router, prefix='', tags=["cart"]) # корзина
 
 
 

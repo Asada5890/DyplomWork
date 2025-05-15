@@ -1,17 +1,56 @@
-from fastapi import APIRouter, Request, Form, Depends
+from fastapi import APIRouter, Request, Form, Depends, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from jose import JWTError
+import jwt
 from db.mongo import products
 from schemas.product import Product
 from services.product_service import ProductService
 from services.user_service import UserService
+from core.settings import settings
 
 router = APIRouter()
 templates = Jinja2Templates(directory="frontend")
 
 @router.get("/admin/", response_class=HTMLResponse)
 def admin_page(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        # Если нет токена - редирект на логин
+        return RedirectResponse(url="/login", status_code=303)
+    
+    try:
+        # Декодируем токен
+        payload = jwt.decode(
+            token.replace("Bearer ", ""),
+            settings.SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM]
+        )
+        
+        # Проверяем роль пользователя
+        if payload.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Forbidden")
+            
+    except (JWTError, KeyError):
+        # Если ошибка валидации или нет роли - удаляем куку и редиректим
+        response = RedirectResponse(url="/login", status_code=303)
+        response.delete_cookie("access_token")
+        return response
+    
+    except HTTPException as he:
+        # Для обычных пользователей показываем страницу с запретом доступа
+        return templates.TemplateResponse(
+            "login.html",  # Или специальную страницу access_denied.html
+            {
+                "request": request,
+                "error": "Доступ запрещен. Требуются права администратора"
+            },
+            status_code=403
+        )
+    
     return templates.TemplateResponse("admin.html", {"request": request})
+
+#Работа с продуктами
 
 @router.post("/admin/add-product", response_class=HTMLResponse)
 def add_product(
@@ -45,7 +84,7 @@ def add_product(
 
 @router.get("/admin/products", response_class=HTMLResponse)
 def get_products(request: Request):
-    all_products = list(products.find({}))
+    all_products = list(products.find({})) #TODO: закинуть в сервисы 
     return templates.TemplateResponse("admin_products.html", {"request": request, "products": all_products})
 
 @router.post("/admin/products/{product_id}", response_class=HTMLResponse)
@@ -96,6 +135,8 @@ def update_product(request: Request, product_id: str, product_service: ProductSe
         return templates.TemplateResponse("edit_product.html", {"request": request, "product": product, "message": message})
 
 
+#Работа с пользователями
+
 @router.get("/admin/users", response_class=HTMLResponse)
 def get_users(request: Request, user_service: UserService = Depends()):
     users_count = user_service.get_users_count()  
@@ -105,7 +146,6 @@ def get_users(request: Request, user_service: UserService = Depends()):
         message = f"Ошибка: {str(e)}"
         return templates.TemplateResponse("admin_users.html", {"request": request, "message": message, "users_count": users_count})
     return templates.TemplateResponse("admin_users.html", {"request": request, "users": all_users, "users_count": users_count})
-
 
 @router.post("/admin/users/{user_id}", response_class=HTMLResponse)
 def change_user_data(request: Request, user_id: str, user_service: UserService = Depends()):
@@ -121,7 +161,6 @@ def change_user_data(request: Request, user_id: str, user_service: UserService =
     
     all_users = user_service.get_all_users()
     return templates.TemplateResponse("admin_users.html", {"request": request, "users": all_users, "message": message})
-
 @router.get("/admin/users/edit/{user_id}", response_class=HTMLResponse)
 def edit_user(request: Request, user_id: str, user_service: UserService = Depends()):
     try:
@@ -132,7 +171,6 @@ def edit_user(request: Request, user_id: str, user_service: UserService = Depend
     except Exception as e:
         message = f"Ошибка: {str(e)}"
         return templates.TemplateResponse("admin_users.html", {"request": request, "message": message})
-
     return templates.TemplateResponse("edit_user.html", {"request": request, "user": user})
 
 @router.post("/admin/users/edit/{user_id}", response_class=HTMLResponse)

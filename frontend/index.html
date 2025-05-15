@@ -114,6 +114,9 @@
             margin: 0 auto;
             width: 100%;
         }
+        a{
+            color: white;
+        }
 
         .products-grid {
             display: grid;
@@ -122,6 +125,10 @@
             padding: 2rem 0;
         }
 
+
+           span{
+            color: white;
+           }
         /* Карточка товара */
         .product-card {
             background: white;
@@ -211,6 +218,17 @@
             margin-bottom: 1rem;
         }
 
+        .user-menu{
+            display: flex;
+            gap: 10px;
+        }
+
+        button{
+            all:unset;
+            color: white;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -243,27 +261,45 @@
                     <a href="#" class="nav-link">Каталог</a>
                     <div class="dropdown-menu">
                         {% for category in categories %}
-                        <a href="/products/category/{{ category }}" class="dropdown-link">{{ category }}</a>
+                        <a href="/category/{{ category }}" class="dropdown-link">{{ category }}</a>
                         {% endfor %}
                     </div>
                 </div>
-                <form action="/search" method="get">
-                    <input type="text" name="query" placeholder="Поиск товаров..." required>
-                    <button type="submit">Поиск</button>
-                  </form>
+
                   
-                  {% if results %}
-                    <ul>
-                      {% for product in results %}
-                        <li>{{ product.name }} — {{ product.description }}</li>
-                      {% endfor %}
-                    </ul>
-                  {% elif results is not none %}
-                    <p>Ничего не найдено.</p>
-                  {% endif %}
                 <a href="#" class="nav-link">Акции</a>
                 <a href="#" class="nav-link">Доставка</a>
                 <a href="#" class="nav-link">Контакты</a>
+            </div>
+
+            <div class="auth-buttons" id="authButtons">
+                {% if not user %}
+                    <!-- Показываем, когда пользователь не авторизован -->
+                    <a href="/login" class="nav-link">Войти</a>
+                    <span class="nav-separator">|</span>
+                    <a href="/register" class="nav-link">Регистрация</a>
+                {% else %}
+                    <!-- Показываем, когда пользователь авторизован -->
+                    <div class="user-menu">
+                        {% if user.role == "admin" %}
+                            <a href="/admin" class="nav-link">Админ панель</a>
+                            <span class="nav-separator">|</span>
+                            {% else %}
+                            <a href="/profile" class="nav-link">
+                                {% if user.name %}
+                                {{ user.name }} {{ user.surname }}
+                                {% else %}
+                                {{ user.email }} 
+                                {% endif %}
+                            </a>
+                            <span class="nav-separator">|</span>
+                            {% endif %}
+                        
+                        <form action="/logout" method="post" class="logout-form">
+                            <button type="submit" class="nav-link logout-btn">Выйти</button>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
         </nav>
     </header>
@@ -321,13 +357,68 @@
     </footer>
 
     <script>
-        // Логика корзины
+        // Получение куки
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for(let cookie of cookies) {
+                const [key, value] = cookie.trim().split('=');
+                if(key === name) {
+                    return decodeURIComponent(value);
+                }
+            }
+            return null;
+        }
+    
+        // Проверка аутентификации
+        function checkAuth() {
+            const token = getCookie('access_token');
+            const loginLink = document.getElementById('loginLink');
+            const registerLink = document.getElementById('registerLink');
+            const userMenu = document.getElementById('userMenu');
+            const profileLink = document.getElementById('profileLink');
+    
+            if (token) {
+                try {
+                    // Декодируем JWT
+                    const payload = JSON.parse(atob(token.split(' ')[1].split('.')[1]));
+                    
+                    loginLink.style.display = 'none';
+                    registerLink.style.display = 'none';
+                    userMenu.style.display = 'flex';
+                    profileLink.textContent = payload.email || 'Профиль';
+                } catch (e) {
+                    console.error('Ошибка токена:', e);
+                    logout();
+                }
+            } else {
+                loginLink.style.display = 'block';
+                registerLink.style.display = 'block';
+                userMenu.style.display = 'none';
+            }
+        }
+    
+        // Выход
+        function logout() {
+            document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+            window.location.href = '/';
+        }
+    
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', checkAuth);
+        
+        // Обработчик выхода
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
+    
+        // Защита действий
         document.querySelectorAll('.cart-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.classList.add('added');
-                this.textContent = 'Добавлено';
-                this.disabled = true;
+                if (!getCookie('access_token')) {
+                    e.preventDefault();
+                    window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+                }
             });
         });
     </script>
