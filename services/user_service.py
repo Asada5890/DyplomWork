@@ -1,6 +1,10 @@
 from typing import Union
 from fastapi import Depends
+from sqlalchemy import select
 from sqlalchemy.orm import Session
+import jwt
+from core.settings import settings
+from fastapi import Request, HTTPException
 
 from core.security import get_password_hash, verify_password
 from db.session import get_db
@@ -41,6 +45,10 @@ class UserService:  # Общий класс пользователей
         self.db.commit()
         self.db.refresh(db_user)
         return UserDTO.from_orm(db_user)
+    
+    async def get_user_by_email(self, email: str) -> User:
+        result = await self.session.execute(select(User).where(User.email == email))
+        return result.scalars().first()
 
     def get_all_users(self):
         """
@@ -139,11 +147,12 @@ class UserService:  # Общий класс пользователей
             print("Ошибка удаления пользователя: " + str(e))
             return False
         
-    def select_user_by_email(db: Session, email: str) -> User:
+    async def select_user_by_email(db: Session, email: str) -> User:
         """
         поиск пользователя по почте
         """
-        return db.query(User).filter(User.email == email).first()
+        result = await db.execute(select(User).where(User.email == email))
+        return result.scalars().first()
 
 
     def validate_user(self, email: str, password: str) -> Union[User, bool]:
@@ -159,6 +168,22 @@ class UserService:  # Общий класс пользователей
             return user  # Возвращаем пользователя, если учетные данные верны
         else:
             return False  # Возвращаем False, если учетные данные неверны
+ 
+
+    def get_user_id_from_cookie(request: Request):
+        token = request.cookies.get('access_token')  # Получаем токен из cookies
+        
+        if not token:
+            raise HTTPException(status_code=401, detail="Token not found")
+        
+        try:
+            # Декодируем JWT токен
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            return payload.get("user_id")  # Предполагаем, что user_id хранится в payload
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=401, detail="Token has expired")
+        except jwt.InvalidTokenError:
+            raise HTTPException(status_code=401, detail="Invalid token")
 
     # def login_history(self):
 

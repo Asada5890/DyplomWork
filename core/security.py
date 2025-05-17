@@ -37,7 +37,7 @@ async def get_current_user(request: Request):
     
     try:
         payload = jwt.decode(
-            token.split()[1],  # Удаляем 'Bearer '
+            token.split()[1],  
             settings.SECRET_KEY,
             algorithms=[settings.JWT_ALGORITHM]
         )

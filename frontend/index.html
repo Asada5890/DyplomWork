@@ -286,11 +286,7 @@
                             <span class="nav-separator">|</span>
                             {% else %}
                             <a href="/profile" class="nav-link">
-                                {% if user.name %}
-                                {{ user.name }} {{ user.surname }}
-                                {% else %}
-                                {{ user.email }} 
-                                {% endif %}
+                                Профиль
                             </a>
                             <span class="nav-separator">|</span>
                             {% endif %}
@@ -311,7 +307,7 @@
         </div>
         <div class="products-grid">
             {% for product in products %}
-            <div class="product-card" onclick="window.location.href='/products/product/{{ product._id }}'">
+            <!-- <div class="product-card" onclick="window.location.href='/product/{{ product._id }}'"> -->
                 {% if product.images and product.images[0] %}
                     <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-image">
                 {% else %}
@@ -328,7 +324,13 @@
                         Категория: {{ product.category }}<br>
                         Бренд: {{ product.brand }}
                     </p>
-                    <button class="cart-btn">В корзину</button>
+                    <form action="/add_to_cart" method="post">
+                        <input type="hidden" name="user_id" value="{{ user_id }}"> <!-- или получаем из сессии -->
+                        <input type="hidden" name="product_id" value="{{ product._id }}">
+                        <input type="hidden" name="quantity" value="1"> <!-- или любое количество товара по умолчанию -->
+                        <button type="submit" class="cart-btn">В корзину</button>
+                    </form>
+                    
                 </div>
             </div>
             {% endfor %}

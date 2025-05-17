@@ -1,93 +1,127 @@
-from db.mongo import carts
+from pymongo import ReturnDocument
 from bson import ObjectId
+from fastapi import HTTPException, status, Depends
+from decimal import Decimal
 from schemas.cart import Cart, CartItem
-from services.product_service import ProductService
+from models.user import User
+from db import session, mongo
 
 class CartService:
-    def __init__(self):
-        self.collection = carts
-        self.product_service = ProductService()
+    def __init__(self, mongo_db, session):
+        self.carts = mongo_db.carts
+        self.products = mongo_db.products
+        self.session = session
 
-    def get_user_cart(self, user_id: int):
-        """
-        Получает корзину пользователя по user_id.
-        """
-        user_id_str = str(user_id)  # Преобразуем user_id из SQLite (целое число) в строку
-        cart = self.collection.find_one({"user_id": user_id_str})
-        if not cart:
-            return None
-        return Cart(**cart)  # Преобразуем результат в объект Cart
+    def _get_user(self, user_id: int):
+        user = self.session.query(User).get(user_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Пользователь не найден"
+            )
+        return user
 
-    def add_to_cart(self, user_id: int, product_id: str, quantity: int):
-        """
-        Добавляет товар в корзину или обновляет его количество, если товар уже есть в корзине.
-        """
-        user_id_str = str(user_id)  # Преобразуем user_id в строку для MongoDB
-        # Получаем продукт по идентификатору
-        product = self.product_service.get_product_by_id(product_id)
+    def _get_product(self, product_id: str):
+        product = self.products.find_one({"_id": ObjectId(product_id)})
         if not product:
-            raise Exception("Продукт не найден")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Товар не найден"
+            )
+        return product
 
-        # Получаем корзину пользователя
-        cart = self.get_user_cart(user_id_str)
-        if not cart:
-            # Если корзины нет, создаем новую
-            cart = Cart(user_id=user_id_str, items=[], total_price=0.0)
-
-        # Проверяем, есть ли товар уже в корзине
-        existing_item = next((item for item in cart.items if item.product_id == product_id), None)
-
-        if existing_item:
-            # Если товар уже есть в корзине, увеличиваем количество
-            existing_item.quantity += quantity
-        else:
-            # Если товара нет в корзине, добавляем новый товар
-            cart.items.append(CartItem(product_id=product_id, quantity=quantity))
-
-        # Обновляем общую цену корзины
-        self._update_total_price(cart)
-
-        # Сохраняем корзину в базу данных
-        self.collection.update_one(
-            {"user_id": user_id_str},
-            {"$set": cart.dict()},
-            upsert=True  # Если корзины нет, создаем новую
-        )
-
-        return cart
-
-    def remove_from_cart(self, user_id: int, product_id: str):
-        """
-        Удаляет товар из корзины.
-        """
-        user_id_str = str(user_id)  # Преобразуем user_id в строку для MongoDB
-        cart = self.get_user_cart(user_id_str)
-        if not cart:
-            raise Exception("Корзина не найдена")
-
-        # Удаляем товар из корзины
-        cart.items = [item for item in cart.items if item.product_id != product_id]
+    def get_cart(self, user_id: int) -> Cart:
+        user = self._get_user(user_id)
+        cart = self.carts.find_one({"user_id": user.id})
         
-        # Обновляем общую цену корзины
-        self._update_total_price(cart)
+        if not cart:
+            return Cart(user_id=user.id, items=[])
+            
+        # Конвертация MongoDB document в Pydantic модель
+        return Cart(**cart)
 
-        # Сохраняем изменения в базу данных
-        self.collection.update_one({"user_id": user_id_str}, {"$set": cart.dict()})
-        return cart
+    def add_to_cart(self, user_id: int, product_id: str, quantity: int = 1) -> Cart:
+        user = self._get_user(user_id)
+        product = self._get_product(product_id)
+        
+        # Обновление корзины с атомарной операцией
+        updated_cart = self.carts.find_one_and_update(
+            {"user_id": user.id},
+            {
+                "$push": {
+                    "items": {
+                        "product_id": product_id,
+                        "quantity": quantity
+                    }
+                },
+                "$inc": {"total_price": product["price"] * quantity}
+            },
+            upsert=True,
+            return_document=ReturnDocument.AFTER
+        )
+        
+        return Cart(**updated_cart)
 
-    def update_total_price(self, cart: Cart):
-        """
-        Обновляет общую цену корзины.
-        """
-        total = 0.0
-        for item in cart.items:
-            product = self.product_service.get_product_by_id(item.product_id)
-            total += product["price"] * item.quantity
-        cart.total_price = total
+    def update_item(self, user_id: int, product_id: str, new_quantity: int) -> Cart:
+        user = self._get_user(user_id)
+        product = self._get_product(product_id)
+        
+        # Находим текущее количество
+        cart = self.get_cart(user.id)
+        current_item = next((i for i in cart.items if i.product_id == product_id), None)
+        
+        if not current_item:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Товар не найден в корзине"
+            )
+        
+        # Вычисляем разницу для обновления общей суммы
+        price_diff = (new_quantity - current_item.quantity) * product["price"]
+        
+        updated_cart = self.carts.find_one_and_update(
+            {"user_id": user.id, "items.product_id": product_id},
+            {
+                "$set": {"items.$.quantity": new_quantity},
+                "$inc": {"total_price": price_diff}
+            },
+            return_document=ReturnDocument.AFTER
+        )
+        
+        return Cart(**updated_cart)
 
-    def clear_cart(self, user_id: int):
-        """
-        Очищает корзину пользователя.
-        """
-        user_id_str = str(user_id)  # Преобразуем user_id в строку для MongoDB
-        self.collection.delete_one({"user_id": user_id_str})
+    def remove_item(self, user_id: int, product_id: str) -> Cart:
+        user = self._get_user(user_id)
+        product = self._get_product(product_id)
+        
+        # Получаем текущую корзину для расчета
+        cart = self.get_cart(user.id)
+        item_to_remove = next((i for i in cart.items if i.product_id == product_id), None)
+        
+        if not item_to_remove:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Товар не найден в корзине"
+            )
+        
+        # Обновляем корзину
+        updated_cart = self.carts.find_one_and_update(
+            {"user_id": user.id},
+            {
+                "$pull": {"items": {"product_id": product_id}},
+                "$inc": {"total_price": -item_to_remove.quantity * product["price"]}
+            },
+            return_document=ReturnDocument.AFTER
+        )
+        
+        return Cart(**updated_cart) if updated_cart else Cart(user_id=user.id)
+
+    def clear_cart(self, user_id: int) -> None:
+        user = self._get_user(user_id)
+        self.carts.delete_one({"user_id": user.id})
+
+
+
+
+def get_cart_service(mongo_db=Depends(mongo), session=Depends(session)):
+    return CartService(mongo_db=mongo_db, session=session)

@@ -1,6 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, Request, Form
+from jose import JWTError
+import jwt
 from pydantic import ValidationError
 from typing import Union
+from core.settings import settings
 from models.user import User
 from schemas.auth import Token, UserResponse
 
@@ -111,40 +114,39 @@ async def logout_user():
     )
     
     return response
-
-
-@router.get("/profile", response_class=HTMLResponse, response_model=None)
-async def profile(
-    request: Request,
-    user_service: UserService = Depends(),
-):
-    # Проверяем куки напрямую
+@router.get("/profile", response_class=HTMLResponse)
+def profile_page(request: Request):
+    # Проверяем наличие токена в куках
     token = request.cookies.get("access_token")
     if not token:
         return RedirectResponse(url="/login", status_code=303)
-
+    
     try:
-        # Получаем пользователя из токена в куках
-        current_user = await get_current_user(token, user_service)
-        
-        # Получаем полные данные пользователя
-        user = await user_service.get_user_by_id(current_user.id)
-        
-        return templates.TemplateResponse(
-            "profile.html",
-            {
-                "request": request,
-                "user": {
-                    "name": user.name,
-                    "surname": user.surname,
-                    "email": user.email,
-                    "phone_number": user.phone_number
-                }
-            }
+        # Декодируем токен
+        payload = jwt.decode(
+            token.replace("Bearer ", ""),
+            settings.SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM]
         )
+        
+        # Извлекаем данные пользователя из payload
+        user_email = payload.get("email")  
+        user_role = payload.get("role")
+        print(payload)
 
-    except Exception as e:
-        # При любой ошибке перенаправляем на логин
+        
+    except (JWTError, KeyError):
+        # Обработка невалидного токена
         response = RedirectResponse(url="/login", status_code=303)
         response.delete_cookie("access_token")
         return response
+    
+    # Передаем данные в шаблон профиля
+    return templates.TemplateResponse(
+        "profile.html",
+        {
+            "request": request,
+            "user_email": user_email,
+            "user_role": user_role
+        }
+    )

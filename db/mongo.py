@@ -7,9 +7,8 @@ products_db = server[settings.MONGODB_DB_NAME]
 
 products = products_db[settings.MONGODB_COLLECTION_PRODUCTS]
 
+cart = products_db[settings.MONGODB_COLLECTION_СARTS]
+
 
 data = products.find({})
-
-
-
-    
+cart = cart.find({})

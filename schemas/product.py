@@ -8,6 +8,6 @@ class Product(BaseModel): # Валидация данных для продук�
     articul: str
     price: float
     category: str
-    brand: str | None  # Значение по умолчанию
+    brand: str | None  
     img: Optional[str] = None
     description: Optional[str] = ""

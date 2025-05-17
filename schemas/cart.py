@@ -8,6 +8,6 @@ class CartItem(BaseModel):
 
 
 class Cart(BaseModel):
-    user_id: str
+    user_id: int
     items: List[CartItem]
     total_price: float = Field(default=0.0)

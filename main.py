@@ -66,7 +66,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix='', tags=["auth"]) # Ауентификация
 app.include_router(product.router, prefix='', tags=["products"]) # Продукты
 app.include_router(admin.router, prefix='', tags=["admin"]) # Админка
-# app.include_router(cart.router, prefix='', tags=["cart"]) # корзина
+app.include_router(cart.router, prefix='', tags=["cart"]) # корзина
 
 
 
