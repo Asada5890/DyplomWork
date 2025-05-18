@@ -1,38 +1,324 @@
-<!-- templates/cart.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
-    <link rel="stylesheet" href="/static/css/cart.css">
+    <title>Корзина - СтройМаркет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #27ae60;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Arial', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: var(--light);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        /* Cart Content Styles */
+        .cart-container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .cart-title {
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .cart-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cart-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin: 2rem 0;
+            font-weight: 700;
+        }
+
+        .checkout-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+            margin-top: 2rem;
+        }
+
+        .checkout-btn:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 4rem;
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .cart-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem;
+                border: none;
+            }
+
+            .cart-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--primary);
+                margin-right: 1rem;
+            }
+
+            .quantity-controls {
+                justify-content: flex-end;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Your Cart</h1>
-    {% if cart_items %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                    <tr>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.price }}</td>
-                        <td>{{ item.quantity * item.price }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <h3>Total: {{ total_price }}</h3>
-    {% else %}
-        <p>Your cart is empty.</p>
-    {% endif %}
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">СтройМаркет</a>
+        </nav>
+    </header>
+
+    <main class="cart-container">
+        <h1 class="cart-title">Ваша корзина</h1>
+
+        {% if cart_items %}
+            <div class="cart-items">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Товар</th>
+                            <th>Количество</th>
+                            <th>Цена</th>
+                            <th>Сумма</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                            <tr>
+                                <td data-label="Товар">{{ item.product_name }}</td>
+                                <td data-label="Количество">
+                                    <div class="quantity-controls">
+                                        <form method="POST" action="/decrease_quantity/{{ item.product_id }}" class="quantity-form">
+                                            <button type="submit" class="quantity-btn">-</button>
+                                        </form>
+                                        <span>{{ item.quantity }}</span>
+                                        <form method="POST" action="/increase_quantity/{{ item.product_id }}" class="quantity-form">
+                                            <button type="submit" class="quantity-btn">+</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td data-label="Цена">{{ item.price|int }} ₽</td>
+                                <td data-label="Сумма">{{ (item.quantity * item.price)|int }} ₽</td>
+                                <td>
+                                    <form method="POST" action="/remove_item/{{ item.product_id }}">
+                                        <button type="submit" class="remove-btn">
+                                            <i class="fas fa-times"></i>
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="cart-total">
+                    Итого: {{ total_price|int }} ₽
+                </div>
+                <form action="/checkout" method="get">
+                    <button type="submit" class="checkout-btn">
+                        <i class="fas fa-credit-card"></i>
+                        Оформить заказ
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Ваша корзина пуста</p>
+            </div>
+        {% endif %}
+    </main>
+
+    <script>
+        // Обработка обновления количества
+        document.querySelectorAll('.quantity-form').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (response.ok) {
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
+            });
+        });
+
+        // Обработка удаления товара
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const form = btn.closest('form');
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (response.ok) {
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

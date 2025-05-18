@@ -29,18 +29,25 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 class TokenData(BaseModel):
     email: Optional[str] = None
 
+    
 async def get_current_user(request: Request):
     token = request.cookies.get("access_token")
+    
+    print(f"[DEBUG] Token from cookies: {token}")  # Логирование
     
     if not token:
         return None
     
     try:
+        # Удаление Bearer даже если его нет
+        clean_token = token.replace("Bearer ", "").strip()
         payload = jwt.decode(
-            token.split()[1],  
+            clean_token,
             settings.SECRET_KEY,
             algorithms=[settings.JWT_ALGORITHM]
         )
+        print(f"[DEBUG] Decoded payload: {payload}")  # Логирование
         return payload
-    except (JWTError, AttributeError):
+    except Exception as e:
+        print(f"[ERROR] Token decode failed: {str(e)}")
         return None

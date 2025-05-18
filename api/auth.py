@@ -132,7 +132,7 @@ def profile_page(request: Request):
         # Извлекаем данные пользователя из payload
         user_email = payload.get("email")  
         user_role = payload.get("role")
-        print(payload)
+
 
         
     except (JWTError, KeyError):

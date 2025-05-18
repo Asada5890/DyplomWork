@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     MONGODB_DB_NAME: str = "laminate_store"
     MONGODB_COLLECTION_PRODUCTS: str = "products"
     MONGODB_COLLECTION_СARTS: str = "carts"
+
+    #Redis settings
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
     
 
 

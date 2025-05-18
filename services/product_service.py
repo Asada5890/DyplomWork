@@ -25,7 +25,10 @@ class ProductService:
         """
         Поиск продукта по ID
         """
-        return self.collection.find_one({"_id": ObjectId(product_id)})
+        if isinstance(product_id, str):
+            product_id = ObjectId(product_id)
+    
+        return self.collection.find_one({"_id": product_id})
     def get_all_categories(self):
         """
         Возвращает все категории

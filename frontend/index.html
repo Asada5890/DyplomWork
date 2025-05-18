@@ -4,13 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СтройМаркет - Магазин строительных материалов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Базовые стили */
+        /* CSS Variables */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #27ae60;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        /* Base Styles */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Inter', 'Arial', sans-serif;
         }
 
         body {
@@ -18,106 +33,189 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            line-height: 1.6;
         }
 
-        /* Шапка */
+        /* Header */
         header {
-            background: #2c3e50;
+            background: var(--primary);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(8px);
         }
 
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            position: relative;
         }
 
         .logo {
-            color: white;
+            color: var(--light);
             font-size: 1.8rem;
-            font-weight: bold;
+            font-weight: 700;
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            opacity: 0.9;
         }
 
         .nav-menu {
             display: flex;
             gap: 2rem;
-            position: relative;
+            align-items: center;
         }
 
         .nav-link {
-            color: #ecf0f1;
+            color: var(--light);
             text-decoration: none;
-            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            position: relative;
         }
 
         .nav-link:hover {
-            color: #3498db;
+            background: rgba(255,255,255,0.1);
         }
 
+        /* Dropdown Menu */
         .nav-item {
-    position: relative;
-}
+            position: relative;
+        }
 
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    min-width: 200px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    display: flex; /* всегда в DOM, но "невидим" */
-    flex-direction: column;
-    z-index: 999;
-    border-radius: 8px;
-    overflow: hidden;
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            min-width: 240px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            z-index: 1000;
+        }
 
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    pointer-events: none;
+        .nav-item:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
 
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-}
+        .dropdown-link {
+            padding: 1rem;
+            color: var(--dark);
+            text-decoration: none;
+            display: block;
+            transition: var(--transition);
+        }
 
-.dropdown-link {
-    padding: 0.8rem 1rem;
-    text-decoration: none;
-    color: #2c3e50;
-    transition: background 0.3s;
-}
+        .dropdown-link:hover {
+            background: #f8f9fa;
+            padding-left: 1.5rem;
+        }
 
-.dropdown-link:hover {
-    background: #f0f0f0;
-}
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
 
-.nav-item:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-}
+        .nav-separator {
+            color: rgba(255,255,255,0.3);
+        }
 
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
 
-        /* Основной контент */
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            color:white;
+            transition: 0.3s;
+        }
+
+        i{
+            all:unset;
+            color: white;
+            transition: 0.3s;
+        }
+        i:hover{
+            color: #2980b9;
+        }
+
+        .logout-btn{
+            all:unset;
+            color: white;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .logout-btn:hover{
+            color: red;
+
+        }
+
+        
+
+   
+
+        /* Main Content */
         main {
             flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
+            padding: 2rem 1rem;
+            max-width: 1280px;
             margin: 0 auto;
             width: 100%;
         }
-        a{
+
+        /* Banner */
+        .banner {
+            background: var(--secondary);
             color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
         }
 
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.1), transparent);
+            z-index: 0;
+        }
+
+        .banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Products Grid */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -125,114 +223,130 @@
             padding: 2rem 0;
         }
 
-
-           span{
-            color: white;
-           }
-        /* Карточка товара */
+        /* Product Card */
         .product-card {
             background: white;
-            border-radius: 12px;
+            border-radius: var(--radius);
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            position: relative;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
         }
 
         .product-image {
             width: 100%;
-            height: 200px;
+            height: 240px;
             object-fit: cover;
-            border-bottom: 3px solid #3498db;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
 
         .product-info {
             padding: 1.5rem;
+            position: relative;
         }
 
         .product-title {
             font-size: 1.2rem;
-            color: #2c3e50;
-            margin-bottom: 0.8rem;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
         }
 
         .product-price {
-            color: #27ae60;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
         }
 
+        /* Cart Button */
         .cart-btn {
-            background: #3498db;
+            background: var(--secondary);
             color: white;
             border: none;
             padding: 0.8rem 1.5rem;
-            border-radius: 25px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .cart-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
         }
 
         .cart-btn.added {
-            background: #7f8c8d;
-            cursor: default;
+            background: var(--gray);
+            pointer-events: none;
         }
 
-        /* Футер */
+        /* Footer */
         footer {
-            background: #2c3e50;
+            background: var(--primary);
             color: white;
-            padding: 2rem;
+            padding: 3rem 1rem;
             margin-top: auto;
         }
 
         .footer-content {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 3rem;
         }
 
         .footer-section h3 {
-            margin-bottom: 1rem;
-            color: #3498db;
+            color: var(--light);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
-        /* Баннер */
-        .banner {
-            background: #3498db;
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            border-radius: 12px;
+        .footer-section p {
+            margin-bottom: 0.75rem;
+            opacity: 0.9;
         }
 
-        .banner h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .user-menu{
-            display: flex;
-            gap: 10px;
-        }
-
-        button{
-            all:unset;
-            color: white;
-            cursor: pointer;
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
                 gap: 1rem;
+            }
+
+            .banner {
+                padding: 3rem 1rem;
+            }
+
+            .banner h1 {
+                font-size: 2rem;
             }
 
             .product-card {
@@ -242,13 +356,61 @@
             .dropdown-menu {
                 position: static;
                 box-shadow: none;
-                border-radius: 0;
                 display: none;
+                width: 100%;
             }
 
             .nav-item:hover .dropdown-menu {
                 display: block;
             }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+            }
+
+            .nav-link {
+                padding: 0.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+        }
+
+        .notification.show {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); }
+            to { transform: translateX(150%); }
         }
     </style>
 </head>
@@ -265,8 +427,6 @@
                         {% endfor %}
                     </div>
                 </div>
-
-                  
                 <a href="#" class="nav-link">Акции</a>
                 <a href="#" class="nav-link">Доставка</a>
                 <a href="#" class="nav-link">Контакты</a>
@@ -274,25 +434,24 @@
 
             <div class="auth-buttons" id="authButtons">
                 {% if not user %}
-                    <!-- Показываем, когда пользователь не авторизован -->
                     <a href="/login" class="nav-link">Войти</a>
                     <span class="nav-separator">|</span>
                     <a href="/register" class="nav-link">Регистрация</a>
                 {% else %}
-                    <!-- Показываем, когда пользователь авторизован -->
                     <div class="user-menu">
+                        <span class="nav-separator">|</span>
                         {% if user.role == "admin" %}
                             <a href="/admin" class="nav-link">Админ панель</a>
                             <span class="nav-separator">|</span>
-                            {% else %}
-                            <a href="/profile" class="nav-link">
-                                Профиль
+                        {% else %}
+                            <a href="/profile" class="nav-link">Профиль</a>
+                            <a href="/view_cart" class="cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
                             </a>
                             <span class="nav-separator">|</span>
-                            {% endif %}
-                        
+                        {% endif %}
                         <form action="/logout" method="post" class="logout-form">
-                            <button type="submit" class="nav-link logout-btn">Выйти</button>
+                            <button type="submit" class="logout-btn">Выйти</button>
                         </form>
                     </div>
                 {% endif %}
@@ -305,32 +464,29 @@
             <h1>Строительные материалы по лучшим ценам</h1>
             <p>Более 5000 товаров в наличии</p>
         </div>
+
         <div class="products-grid">
             {% for product in products %}
-            <!-- <div class="product-card" onclick="window.location.href='/product/{{ product._id }}'"> -->
-                {% if product.images and product.images[0] %}
-                    <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-image">
-                {% else %}
-                    <div class="product-image" style="display: flex; align-items: center; justify-content: center; background: #e0e0e0; color: #555; font-weight: bold; font-size: 1rem; height: 200px;">
-                        Нет фотографии
-                    </div>
-                {% endif %}
+            <div class="product-card">
+                <div class="product-image-container">
+                    {% if product.images and product.images[0] %}
+                        <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-image">
+                    {% else %}
+                        <div class="product-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                            <span>Нет изображения</span>
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="product-info">
                     <h3 class="product-title">{{ product.name }}</h3>
-                    <p class="product-price">
-                        {{ product.price if product.price else "Цена по запросу" }} ₽
-                    </p>
-                    <p style="font-size: 0.9rem; color: #7f8c8d;">
-                        Категория: {{ product.category }}<br>
-                        Бренд: {{ product.brand }}
-                    </p>
-                    <form action="/add_to_cart" method="post">
-                        <input type="hidden" name="user_id" value="{{ user_id }}"> <!-- или получаем из сессии -->
+                    <p class="product-price">{{ product.price }} ₽</p>
+                    <form action="/add_to_cart" method="POST">
                         <input type="hidden" name="product_id" value="{{ product._id }}">
-                        <input type="hidden" name="quantity" value="1"> <!-- или любое количество товара по умолчанию -->
-                        <button type="submit" class="cart-btn">В корзину</button>
+                        <button type="submit" class="cart-btn">
+                            <i class="fas fa-cart-plus"></i>
+                            В корзину
+                        </button>
                     </form>
-                    
                 </div>
             </div>
             {% endfor %}
@@ -357,72 +513,87 @@
             </div>
         </div>
     </footer>
-
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        Товар добавлен в корзину!
+    </div>
     <script>
-        // Получение куки
+        // Auth Logic
         function getCookie(name) {
             const cookies = document.cookie.split(';');
             for(let cookie of cookies) {
                 const [key, value] = cookie.trim().split('=');
-                if(key === name) {
-                    return decodeURIComponent(value);
-                }
+                if(key === name) return decodeURIComponent(value);
             }
             return null;
         }
-    
-        // Проверка аутентификации
+
         function checkAuth() {
             const token = getCookie('access_token');
-            const loginLink = document.getElementById('loginLink');
-            const registerLink = document.getElementById('registerLink');
-            const userMenu = document.getElementById('userMenu');
-            const profileLink = document.getElementById('profileLink');
-    
+            const authElements = {
+                login: document.getElementById('loginLink'),
+                register: document.getElementById('registerLink'),
+                userMenu: document.getElementById('userMenu'),
+                profile: document.getElementById('profileLink')
+            };
+
             if (token) {
                 try {
-                    // Декодируем JWT
-                    const payload = JSON.parse(atob(token.split(' ')[1].split('.')[1]));
-                    
-                    loginLink.style.display = 'none';
-                    registerLink.style.display = 'none';
-                    userMenu.style.display = 'flex';
-                    profileLink.textContent = payload.email || 'Профиль';
-                } catch (e) {
-                    console.error('Ошибка токена:', e);
+                    const tokenData = JSON.parse(atob(token.split('.')[1]));
+                    authElements.login.style.display = 'none';
+                    authElements.register.style.display = 'none';
+                    authElements.userMenu.style.display = 'flex';
+                    if(authElements.profile) {
+                        authElements.profile.textContent = tokenData.email || 'Профиль';
+                    }
+                } catch(e) {
+                    console.error('Auth error:', e);
                     logout();
                 }
             } else {
-                loginLink.style.display = 'block';
-                registerLink.style.display = 'block';
-                userMenu.style.display = 'none';
+                authElements.login.style.display = 'block';
+                authElements.register.style.display = 'block';
+                authElements.userMenu.style.display = 'none';
             }
         }
-    
-        // Выход
+
         function logout() {
             document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;';
             window.location.href = '/';
         }
-    
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', checkAuth);
-        
-        // Обработчик выхода
-        const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) {
-            logoutBtn.addEventListener('click', logout);
-        }
-    
-        // Защита действий
-        document.querySelectorAll('.cart-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                if (!getCookie('access_token')) {
-                    e.preventDefault();
-                    window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
-                }
-            });
+
+          // Обновленный скрипт для уведомлений
+          document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            showNotification();
         });
+
+           // Показать уведомление если есть параметр
+    function showNotification() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('added_to_cart')) {
+            const notification = document.getElementById('notification');
+            
+            // Показать уведомление
+            notification.classList.add('show');
+            
+            // Очистить параметр URL
+            history.replaceState({}, document.title, window.location.pathname);
+            
+            // Скрыть через 3 секунды
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    }
+
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', () => {
+        checkAuth();
+        showNotification();
+    });
     </script>
+
+
 </body>
 </html>
