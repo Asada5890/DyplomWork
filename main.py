@@ -1,11 +1,8 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from bson.errors import InvalidId
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-from api import auth,product, admin,cart
+from api import auth, product, admin, cart, profile, orders
 from db.session import init
 
 
@@ -32,7 +29,9 @@ app.add_middleware(
 app.include_router(auth.router, prefix='', tags=["auth"]) # Ауентификация
 app.include_router(product.router, prefix='', tags=["products"]) # Продукты
 app.include_router(admin.router, prefix='', tags=["admin"]) # Админка
-app.include_router(cart.router, prefix='', tags=["cart"]) # корзина
+app.include_router(cart.router, prefix='', tags=["cart"]) # Корзина
+app.include_router(profile.router, prefix='', tags=["profile"]) # Профиль
+app.include_router(orders.router, prefix='', tags=["orders"]) # Заявки
 
 
 

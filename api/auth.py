@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends, Request, Form
 from jose import JWTError
 import jwt
 from pydantic import ValidationError
-from typing import Union
 from core.settings import settings
 from models.user import User
 from schemas.auth import Token, UserResponse
@@ -114,6 +113,8 @@ async def logout_user():
     )
     
     return response
+
+
 @router.get("/profile", response_class=HTMLResponse)
 def profile_page(request: Request):
     # Проверяем наличие токена в куках

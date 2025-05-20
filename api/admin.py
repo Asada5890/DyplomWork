@@ -3,7 +3,16 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from jose import JWTError
 import jwt
+import json
+from sqlalchemy.orm import joinedload
+from bson import ObjectId
+from services.product_service import ProductService
+from requests import Session
+from streamlit import status
+from core.security import get_current_user
 from db.mongo import products
+from db.session import get_db
+from models.order import Order
 from schemas.product import Product
 from services.product_service import ProductService
 from services.user_service import UserService
@@ -213,3 +222,119 @@ def delete_user(request: Request, user_id: str, user_service: UserService = Depe
     
     all_users = user_service.get_all_users()
     return templates.TemplateResponse("admin_users.html", {"request": request, "users": all_users, "message": message})
+
+
+
+@router.get("/admin/orders")
+async def admin_orders(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="You do not have permission to access this resource.")
+    
+
+    orders = db.query(Order).options(joinedload(Order.user)).all()
+
+    
+    for order in orders:
+        print(f"Order {order.id} items: {order.items}")  
+
+    orders_data = []
+    for order in orders:
+        user_email = order.user.email if order.user else "N/A"
+        
+
+        if isinstance(order.items, str):
+            order.items = json.loads(order.items)
+        
+
+        if isinstance(order.items, list):
+            product_ids = [item["product_id"] for item in order.items]
+
+            object_ids = [ObjectId(pid) for pid in product_ids]
+            
+
+            product_service = ProductService()
+            products = product_service.collection.find({"_id": {"$in": object_ids}})
+            print(f"Products found: {list(products)}")  
+
+            product_map = {str(product["_id"]): product["name"] for product in products}
+            
+
+            product_names = [
+                f'{product_map.get(str(item["product_id"]), "Неизвестный продукт")} (×{item["quantity"]})'
+                for item in order.items
+            ]
+        else:
+            product_names = []  
+        
+        # Формируем данные для шаблона
+        products = list(product_service.collection.find({"_id": {"$in": object_ids}}))
+        orders_data.append({
+            "id": order.id,
+            "user_email": user_email,
+            "products": product_names,
+            "created_at": order.created_at,
+            "status": order.status,
+            "phone": order.phone,
+            "address": order.address,
+        })
+
+    # Отправляем данные в шаблон
+    return templates.TemplateResponse("admin_orders.html", {
+        "request": request,
+        "orders": orders_data
+    })
+
+
+@router.get("/admin/orders/{order_id}/update-status")
+async def show_update_status_page(
+    request: Request,
+    order_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    # Проверка прав администратора
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403)
+    
+    # Получаем заказ из базы данных
+    order = db.query(Order).filter(Order.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404)
+    
+    # Передаем полный объект заказа в шаблон
+    return templates.TemplateResponse(
+        "admin_order_change_status.html",
+        { 
+            "request": request,
+            "order": order  # Передаем весь объект заказа
+        }
+    )
+
+
+@router.post("/admin/orders/{order_id}/update-status")
+async def update_order_status(
+    order_id: int,
+    new_status: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    if current_user["role"] != "admin":
+        raise HTTPException(403)
+    if not current_user:
+        raise HTTPException(403)
+    
+    order = db.query(Order).filter(Order.id == order_id).first()
+    if not order:
+        raise HTTPException(404)
+    
+    order.status = new_status
+    db.commit()
+    
+    return RedirectResponse(url="/admin/orders", status_code=303)

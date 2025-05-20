@@ -15,20 +15,30 @@ class ProductService:
         """
         return list(self.collection.find({}))
     
+
+    def product_exists(self, product_id: ObjectId) -> bool:
+        """
+        Проверяет существование товара по ID
+        """
+        return bool(
+            self.collection.count_documents(
+                {"_id": product_id}, 
+                limit=1
+            )
+        )
+    
     def get_one_product(self, query: dict):
         """
         Возвращает один продукт по id
         """
         return self.collection.find_one(query)
+   
     
     def get_product_by_id(self, product_id):
-        """
-        Поиск продукта по ID
-        """
         if isinstance(product_id, str):
             product_id = ObjectId(product_id)
-    
         return self.collection.find_one({"_id": product_id})
+    
     def get_all_categories(self):
         """
         Возвращает все категории

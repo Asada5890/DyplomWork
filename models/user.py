@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from db.session import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -12,6 +12,7 @@ class User(Base):
     email = Column(String(100), unique=True, index=True, nullable=False)
     password = Column(String(255), nullable=False)  
     role = Column(String(50), default="user")  # Роль по умолчанию - "user"
-    phone_number = Column(String(20), nullable=True)  
+    phone_number = Column(String(20), nullable=True)
 
-
+    # Связь с заказами
+    orders = relationship("Order", back_populates="user")

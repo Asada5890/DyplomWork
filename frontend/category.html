@@ -233,6 +233,10 @@ pointer-events: auto;
             display: block;
         }
     }
+
+    .product-info a {
+        all:unset;
+    }
 </style>
 <header>
     <nav class="nav-container">
@@ -257,11 +261,27 @@ pointer-events: auto;
     <div class="products-grid">
         {% for product in products %}
         <div class="product-card">
-            <img src="#" alt="{{ product.name }}" class="product-image">
-            <div class="product-info">
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.base_price }} ₽</p>
-                <p>Бренд: {{ product.brand }}</p>
+            <div class="product-image-container">
+                {% if product.images and product.images[0] %}
+                    <img src="{{ product.images[0] }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                    <div class="product-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                        <span>Нет изображения</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="product-info" href="/">
+                <a href="/product/{{ product._id }}">
+                <h3 class="product-title">{{ product.name }}</h3>
+                <p class="product-price">{{ product.price }} ₽</p>
+                <form action="/add_to_cart" method="POST">
+                    <input type="hidden" name="product_id" value="{{ product._id }}">
+                </a>
+                    <button type="submit" class="cart-btn">
+                        <i class="fas fa-cart-plus"></i>
+                        В корзину
+                    </button>
+                </form>
             </div>
         </div>
         {% endfor %}

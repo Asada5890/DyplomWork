@@ -380,38 +380,71 @@
         }
 
         .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: var(--radius);
-            display: none;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: var(--shadow-md);
-            z-index: 1000;
-        }
+    position: fixed;
+    bottom: 20px;
+    right: -100%;
+    background: var(--accent);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    transition: right 0.5s ease-out, opacity 0.3s ease;
+    opacity: 0;
+}
 
-        .notification.show {
-            display: flex;
-            animation: slideIn 0.3s ease-out;
-        }
+.notification.show {
+    right: 20px;
+    opacity: 1;
+}
 
-        .notification.hide {
-            animation: slideOut 0.3s ease-in forwards;
-        }
+.notification-icon {
+    font-size: 1.5rem;
+    animation: bounce 0.5s ease 3;
+}
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
 
-        @keyframes slideOut {
-            from { transform: translateX(0); }
-            to { transform: translateX(150%); }
-        }
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: rgba(255,255,255,0.3);
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.notification.show .progress-bar::after {
+    animation: progress 3s linear forwards;
+}
+
+@keyframes progress {
+    to { transform: scaleX(1); }
+}
+
+.product-info a{
+    all:unset;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -477,11 +510,13 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="product-info">
+                <div class="product-info" href="/">
+                    <a href="/product/{{ product._id }}">
                     <h3 class="product-title">{{ product.name }}</h3>
                     <p class="product-price">{{ product.price }} ₽</p>
                     <form action="/add_to_cart" method="POST">
                         <input type="hidden" name="product_id" value="{{ product._id }}">
+                    </a>
                         <button type="submit" class="cart-btn">
                             <i class="fas fa-cart-plus"></i>
                             В корзину
@@ -514,8 +549,12 @@
         </div>
     </footer>
     <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        Товар добавлен в корзину!
+        <i class="fas fa-check-circle notification-icon"></i>
+        <div class="notification-content">
+            <span class="notification-title">Товар добавлен!</span>
+            <span class="notification-message">Перейдите в корзину для оформления</span>
+        </div>
+        <div class="progress-bar"></div>
     </div>
     <script>
         // Auth Logic
@@ -562,36 +601,54 @@
             window.location.href = '/';
         }
 
-          // Обновленный скрипт для уведомлений
-          document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-            showNotification();
+        document.addEventListener('DOMContentLoaded', () => {
+    // Перехватываем все формы добавления в корзину
+    document.querySelectorAll('form[action="/add_to_cart"]').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Отменяем стандартную отправку формы
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    showNotification(); // Показываем уведомление
+                    // Можно обновить счетчик корзины, если он есть
+                    updateCartCounter();
+                } else {
+                    console.error('Ошибка добавления в корзину');
+                }
+            } catch (error) {
+                console.error('Ошибка сети:', error);
+            }
         });
-
-           // Показать уведомление если есть параметр
-    function showNotification() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.has('added_to_cart')) {
-            const notification = document.getElementById('notification');
-            
-            // Показать уведомление
-            notification.classList.add('show');
-            
-            // Очистить параметр URL
-            history.replaceState({}, document.title, window.location.pathname);
-            
-            // Скрыть через 3 секунды
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-    }
-
-    // Инициализация при загрузке
-    document.addEventListener('DOMContentLoaded', () => {
-        checkAuth();
-        showNotification();
     });
+    
+    // Функция показа уведомления
+    function showNotification() {
+        const notification = document.getElementById('notification');
+        
+        // Сбрасываем анимацию прогресс-бара
+        const progressBar = notification.querySelector('.progress-bar');
+        progressBar.style.animation = 'none';
+        void progressBar.offsetWidth; // Триггер reflow
+        progressBar.style.animation = 'progress 3s linear forwards';
+        
+        // Показываем уведомление
+        notification.classList.add('show');
+        
+        // Скрываем через 3 секунды
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+    
+});
     </script>
 
 
