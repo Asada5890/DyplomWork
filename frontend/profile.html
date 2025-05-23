@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - СтройМаркет</title>
+    <style>
+        /* Все стили из предыдущего ответа */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+        body { background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: #2c3e50; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .logo { color: white; font-size: 1.8rem; font-weight: bold; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; }
+        .nav-link { color: #ecf0f1; text-decoration: none; transition: color 0.3s; }
+        .nav-link:hover { color: #3498db; }
+        main { flex: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .profile-container { display: grid; grid-template-columns: 300px 1fr; gap: 3rem; margin-top: 2rem; animation: fadeIn 0.5s ease-out; }
+        .user-info { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; position: relative; }
+        .edit-profile-btn { position: absolute; top: 1rem; right: 1rem; background: #3498db; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; transition: background 0.3s; }
+        .edit-profile-btn:hover { background: #2980b9; }
+        .user-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; }
+        .detail-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #eee; }
+        .detail-label { color: #7f8c8d; font-size: 0.95rem; }
+        .detail-value { color: #2c3e50; font-weight: 500; }
+        .orders-list { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .order-card { padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #eee; border-radius: 8px; transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .order-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .order-status { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem; }
+        .status-delivered { background: #e8f7ee; color: #27ae60; }
+        footer { background: #2c3e50; color: white; padding: 2rem; margin-top: auto; }
+        @media (max-width: 768px) { .profile-container { grid-template-columns: 1fr; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">СтройМаркет</a>
+            <div class="nav-menu">
+                <a href="/profile" class="nav-link">Профиль</a>
+                <a href="/orders" class="nav-link">Заказы</a>
+                <form action="/logout" method="post">
+                    <button type="submit" class="nav-link">Выйти</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <!-- Левая колонка - информация пользователя -->
+            <div class="user-info">
+                <button class="edit-profile-btn">Редактировать</button>
+                <img src="https://via.placeholder.com/100" alt="Аватар" class="user-avatar">
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">{{ user_email }}</span>
+                    </div>
+                    <div class="detail-item">
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Телефон:</span>
+                        <span class="detail-value">{{ user_phone }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка - история заказов -->
+            <div class="orders-list">
+                <h2>История заказов</h2>
+                
+                <!-- Пример заказа -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-date">15 марта 2024</span>
+                        <span class="order-status status-delivered">Доставлен</span>
+                    </div>
+                    <div class="order-products">
+                        <div class="product-item">
+                            <img src="https://via.placeholder.com/60" alt="Товар" class="product-thumbnail">
+                            <div>
+                                <p class="product-name">Кирпич строительный</p>
+                                <p class="product-price">450 ₽/шт</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-total">
+                        Итого: 12 350 ₽
+                    </div>
+                </div>
+
+                <!-- Еще один заказ -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-date">10 марта 2024</span>
+                        <span class="order-status status-delivered">Доставлен</span>
+                    </div>
+                    <div class="order-products">
+                        <div class="product-item">
+                            <img src="https://via.placeholder.com/60" alt="Товар" class="product-thumbnail">
+                            <div>
+                                <p class="product-name">Цемент М500</p>
+                                <p class="product-price">850 ₽/мешок</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-total">
+                        Итого: 8 500 ₽
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>+7 (495) 123-45-67</p>
+                <p>support@stroymarket.ru</p>
+            </div>
+            <div class="footer-section">
+                <h3>Адрес</h3>
+                <p>Москва, ул. Строителей, 15</p>
+                <p>Ежедневно 9:00–21:00</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

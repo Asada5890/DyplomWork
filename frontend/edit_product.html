@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать товар</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #1e1e2f;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e0e0e0;
+        }
+
+        /* ======= НАВИГАЦИЯ ======= */
+        .navbar {
+            background: #2b2b3d;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #bbb;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* ======= КНОПКА НАЗАД ======= */
+        .back-btn {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            padding: 0.6rem 1.2rem;
+            background: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ======= ФОРМА РЕДАКТИРОВАНИЯ ======= */
+        .form-container {
+            max-width: 700px;
+            margin: 4rem auto;
+            background: #2b2b3d;
+            border-radius: 15px;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #bbb;
+            font-weight: 600;
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #555;
+            border-radius: 10px;
+            background: #1a1a28;
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+
+        form input:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #3f51b5;
+            box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.4);
+        }
+
+        form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #5c6bc0;
+        }
+
+        .message {
+            margin-top: 1rem;
+            color: #81c784;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .error {
+            color: #ef5350;
+        }
+
+        /* ==== ОТВЕТ С СООБЩЕНИЕМ ==== */
+        .message-container {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Навигация -->
+    <div class="navbar">
+        <h1>Админка</h1>
+        <div class="nav-links">
+            <a href="/admin/products">Товары</a>
+            <a href="/admin/categories">Категории</a>
+        </div>
+    </div>
+
+    <!-- Кнопка Назад -->
+    <a href="/admin/products" class="back-btn">Назад</a>
+
+    <!-- Форма редактирования товара -->
+    <div class="form-container">
+        <h2 class="form-title">Редактировать товар</h2>
+        <form action="/admin/products/edit/{{ product['_id'] }}" method="post">
+            <label for="name">Название товара:</label>
+            <input type="text" name="name" id="name" value="{{ product['name'] }}" required />
+        
+            <label for="category">Категория:</label>
+            <input type="text" name="category" id="category" value="{{ product['category'] }}" required />
+        
+            <label for="price">Цена:</label>
+            <input type="number" name="price" id="price" value="{{ product['price'] }}" required />
+        
+            <label for="description">Описание:</label>
+            <textarea name="description" id="description">{{ product['description'] }}</textarea>
+        
+            <button type="submit" class="submit-btn">Сохранить изменения</button>
+        </form>
+
+        <!-- Сообщения об успехе или ошибке -->
+        {% if message %}
+            <div class="message-container">
+                <p class="message">{{ message }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

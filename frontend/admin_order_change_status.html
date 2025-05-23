@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение статуса заказа</title>
+    <style>
+        /* Общие стили из предыдущего шаблона */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #1e1e2f;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: #2b2b3d;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #bbb;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: #2b2b3d;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+        }
+
+        .title {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #bbb;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            background: #3d3d4d;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .btn-submit {
+            background: #3f51b5;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.3s;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .status-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #3d3d4d;
+            border-radius: 8px;
+        }
+
+        .status-info span {
+            font-weight: bold;
+            color: #3f51b5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация (такая же как в основном шаблоне) -->
+    <nav class="navbar">
+        <h1>Панель администратора</h1>
+        <div class="nav-links">
+            <a href="/admin/add-product">Добавить товар</a>
+            <a href="/admin/orders">Просмотр заказов</a>
+            <a href="/admin/products">Список товаров</a>
+            <a href="/admin/users">Пользователи</a>
+            <a href="/auth/logout">Выход</a>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <h1 class="title">Изменение статуса заказа</h1>
+        
+        <div class="status-info">
+            Текущий статус заказа #{{ order.id }}: 
+            <span class="status-badge status-{{ order.status }}">
+                {{ order.status }}
+            </span>
+        </div>
+
+        <form method="post" action="/admin/orders/{{ order.id }}/update-status">
+            <div class="form-group">
+                <label for="new_status">Новый статус:</label>
+                <select name="new_status" id="new_status" required>
+                    <option value="new">Новый</option>
+                    <option value="processing">В обработке</option>
+                    <option value="completed">Завершен</option>
+                    <option value="cancelled">Отменен</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-submit">Обновить статус</button>
+        </form>
+    </div>
+</body>
+</html>

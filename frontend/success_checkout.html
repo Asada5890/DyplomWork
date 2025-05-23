@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ оформлен - СтройМаркет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #27ae60;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary);
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* Success Box */
+        .checkout-container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .success-box {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .success-icon {
+            color: var(--accent);
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 1s ease;
+        }
+
+        .success-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .success-details {
+            color: var(--gray);
+            margin: 1.5rem 0;
+            line-height: 1.8;
+        }
+
+        .checkout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .checkout-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+            .success-box {
+                padding: 2rem 1rem;
+            }
+            
+            .success-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        h1{
+            color: #219a52;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">СтройМаркет</a>
+        </nav>
+    </header>
+
+    <main class="checkout-container">
+        <h1>Ваш заказ принят!</h1>
+
+            <a href="/" class="checkout-btn">
+                <i class="fas fa-home"></i>
+                Вернуться на главную
+            </a>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const icon = document.querySelector('.success-icon');
+            setTimeout(() => {
+                icon.style.animation = 'none';
+                void icon.offsetWidth;
+                icon.style.animation = 'bounce 1s ease';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

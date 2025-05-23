@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акции доставки - СтройМаркет</title>
+    <style>
+        /* Базовые стили из шаблона */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+        body { background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: #2c3e50; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .logo { color: white; font-size: 1.8rem; font-weight: bold; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; }
+        .nav-link { color: #ecf0f1; text-decoration: none; transition: color 0.3s; }
+        .nav-link:hover { color: #3498db; }
+        main { flex: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        footer { background: #2c3e50; color: white; padding: 2rem; margin-top: auto; }
+
+        /* Стили для акций доставки */
+        .delivery-header { 
+            text-align: center; 
+            margin-bottom: 3rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .delivery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .delivery-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            position: relative;
+            border: 2px solid #3498db;
+        }
+
+        .delivery-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .delivery-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.5rem;
+        }
+
+        .zone-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            position: absolute;
+            top: -1rem;
+            right: -1rem;
+            font-weight: bold;
+            transform: rotate(5deg);
+        }
+
+        .conditions-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .conditions-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .conditions-list li:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            fill: #2ecc71;
+        }
+
+        .highlight-text {
+            color: #3498db;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .note {
+            background: #f1f2f6;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">СтройМаркет</a>
+            <div class="nav-menu">
+                <a href="/sales" class="nav-link">Акции</a>
+                <a href="/delivery" class="nav-link">Доставка</a>
+                <a href="/contacts" class="nav-link">Контакты</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="delivery-header">
+            <h1>Специальные условия доставки</h1>
+            <p>Выгодные предложения для вашего региона</p>
+        </div>
+
+        <div class="delivery-grid">
+            <!-- Акция 1 -->
+            <div class="delivery-card">
+                <span class="zone-badge">Внутри МКАД</span>
+                <svg class="delivery-icon" viewBox="0 0 24 24">
+                    <path d="M18 18.5C18.83 18.5 19.5 17.83 19.5 17S18.83 15.5 18 15.5 16.5 16.17 16.5 17 17.17 18.5 18 18.5M19.5 9.5H17V12H21.46L19.5 9.5M6 18.5C6.83 18.5 7.5 17.83 7.5 17S6.83 15.5 6 15.5 4.5 16.17 4.5 17 5.17 18.5 6 18.5M20 8L23 12V17H21C21 18.66 19.66 20 18 20S15 18.66 15 17H9C9 18.66 7.66 20 6 20S3 18.66 3 17H1V6C1 4.89 1.89 4 3 4H17V8H20M3 6V15H3.76C4.31 14.39 5.11 14 6 14S7.68 14.39 8.24 15H15V6H3Z"/>
+                </svg>
+                <h3>Бесплатная доставка</h3>
+                <ul class="conditions-list">
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        При заказе от 50 000 ₽
+                    </li>
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Действует для физических лиц
+                    </li>
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Грузчики в подарок
+                    </li>
+                </ul>
+                <div class="highlight-text">0 ₽ за доставку</div>
+                <div class="note">Акция действует до 31.08.2024</div>
+            </div>
+
+            <!-- Акция 2 -->
+            <div class="delivery-card">
+                <span class="zone-badge">До 20 км от МКАД</span>
+                <svg class="delivery-icon" viewBox="0 0 24 24">
+                    <path d="M12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5M12,2A7,7 0 0,1 19,9C19,14.25 12,22 12,22C12,22 5,14.25 5,9A7,7 0 0,1 12,2M12,4A5,5 0 0,0 7,9C7,10 7,12 12,18.71C17,12 17,10 17,9A5,5 0 0,0 12,4Z"/>
+                </svg>
+                <h3>Скидка 50% на доставку</h3>
+                <ul class="conditions-list">
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        При заказе от 30 000 ₽
+                    </li>
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Для любого объема товара
+                    </li>
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Подъем на этаж включен
+                    </li>
+                </ul>
+                <div class="highlight-text">Всего 15 ₽/км</div>
+                <div class="note">Акция действует до 01.09.2024</div>
+            </div>
+
+            <!-- Акция 3 -->
+            <div class="delivery-card">
+                <span class="zone-badge">Вся Москва</span>
+                <svg class="delivery-icon" viewBox="0 0 24 24">
+                    <path d="M18.5 12A3.54 3.54 0 0 0 15 15.5C15 18.1 18.5 22 18.5 22S22 18.1 22 15.5A3.54 3.54 0 0 0 18.5 12M18.5 16.8A1.2 1.2 0 1 1 18.5 14.4A1.29 1.29 0 0 1 19.7 15.6A1.15 1.15 0 0 1 18.5 16.8M19 6V5A1 1 0 0 0 18 4H14.2L13.86 2H11L10.6 4H5A1 1 0 0 0 4 5V19A1 1 0 0 0 5 20H9V18H6V6H7V7A1 1 0 0 0 8 8H16A1 1 0 0 0 17 7V6H18Z"/>
+                </svg>
+                <h3>Ночная доставка</h3>
+                <ul class="conditions-list">
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        С 23:00 до 6:00
+                    </li>
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Специальная цена -20%
+                    </li>
+                    <li>
+                        <svg class="check-icon" viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Предварительный заказ
+                    </li>
+                </ul>
+                <div class="highlight-text">Всего 1 990 ₽</div>
+                <div class="note">Действует круглый год</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>+7 (495) 123-45-67</p>
+                <p>support@stroymarket.ru</p>
+            </div>
+            <div class="footer-section">
+                <h3>Адрес</h3>
+                <p>Москва, ул. Строителей, 15</p>
+                <p>Ежедневно 9:00–21:00</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
