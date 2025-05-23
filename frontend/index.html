@@ -460,9 +460,9 @@
                         {% endfor %}
                     </div>
                 </div>
-                <a href="#" class="nav-link">Акции</a>
-                <a href="#" class="nav-link">Доставка</a>
-                <a href="#" class="nav-link">Контакты</a>
+                <a href="/sales" class="nav-link">Акции</a>
+                <a href="/delivery" class="nav-link">Доставка</a>
+                <a href="/contacts" class="nav-link">Контакты</a>
             </div>
 
             <div class="auth-buttons" id="authButtons">
@@ -602,53 +602,53 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-    // Перехватываем все формы добавления в корзину
-    document.querySelectorAll('form[action="/add_to_cart"]').forEach(form => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Отменяем стандартную отправку формы
+    // // Перехватываем все формы добавления в корзину
+    // document.querySelectorAll('form[action="/add_to_cart"]').forEach(form => {
+    //     form.addEventListener('submit', async (e) => {
+    //         e.preventDefault(); // Отменяем стандартную отправку формы
             
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
+    //         try {
+    //             const response = await fetch(form.action, {
+    //                 method: 'POST',
+    //                 body: new FormData(form),
+    //                 headers: {
+    //                     'Accept': 'application/json'
+    //                 }
+    //             });
                 
-                if (response.ok) {
-                    showNotification(); // Показываем уведомление
-                    // Можно обновить счетчик корзины, если он есть
-                    updateCartCounter();
-                } else {
-                    console.error('Ошибка добавления в корзину');
-                }
-            } catch (error) {
-                console.error('Ошибка сети:', error);
-            }
-        });
-    });
+    //             if (response.ok) {
+    //                 showNotification(); // Показываем уведомление
+    //                 // Можно обновить счетчик корзины, если он есть
+    //                 updateCartCounter();
+    //             } else {
+    //                 console.error('Ошибка добавления в корзину');
+    //             }
+    //         } catch (error) {
+    //             console.error('Ошибка сети:', error);
+    //         }
+    //     });
+    // });
     
     // Функция показа уведомления
-    function showNotification() {
-        const notification = document.getElementById('notification');
+//     function showNotification() {
+//         const notification = document.getElementById('notification');
         
-        // Сбрасываем анимацию прогресс-бара
-        const progressBar = notification.querySelector('.progress-bar');
-        progressBar.style.animation = 'none';
-        void progressBar.offsetWidth; // Триггер reflow
-        progressBar.style.animation = 'progress 3s linear forwards';
+//         // Сбрасываем анимацию прогресс-бара
+//         const progressBar = notification.querySelector('.progress-bar');
+//         progressBar.style.animation = 'none';
+//         void progressBar.offsetWidth; // Триггер reflow
+//         progressBar.style.animation = 'progress 3s linear forwards';
         
-        // Показываем уведомление
-        notification.classList.add('show');
+//         // Показываем уведомление
+//         notification.classList.add('show');
         
-        // Скрываем через 3 секунды
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
+//         // Скрываем через 3 секунды
+//         setTimeout(() => {
+//             notification.classList.remove('show');
+//         }, 3000);
+//     }
     
-});
+// });
     </script>
 
 

@@ -6,16 +6,6 @@ class UserBase(BaseModel):
     name: str
     surname: str
 
-
-class UserCreate(BaseModel):
-    email: EmailStr 
-    name: str 
-    surname: str 
-    password: str 
-    phone_number: str 
-    role: str = "user"  # Роль по умолчанию - "user"
-
-
 class UserDTO(BaseModel):
     class Config:
         from_attributes = True
@@ -24,6 +14,18 @@ class UserDTO(BaseModel):
     surname: str
     email: str
     role: str
+
+
+class UserCreate(BaseModel):
+    email: EmailStr 
+    name: str 
+    surname: str 
+    password: str 
+    phone_number: str 
+    role: str = "user" 
+
+
+
 
 
 class UserLogin(BaseModel):

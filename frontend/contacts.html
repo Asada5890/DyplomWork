@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - СтройМаркет</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+        body { background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: #2c3e50; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .logo { color: white; font-size: 1.8rem; font-weight: bold; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; }
+        .nav-link { color: #ecf0f1; text-decoration: none; transition: color 0.3s; }
+        .nav-link:hover { color: #3498db; }
+        main { flex: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        footer { background: #2c3e50; color: white; padding: 2rem; margin-top: auto; }
+
+        .contact-main {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .contact-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            width: 500px;
+        }
+
+        .contact-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card p, .contact-card a {
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            text-decoration: none;
+        }
+
+        .contact-card a:hover {
+            color: #3498db;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            background: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .social-icon:hover {
+            background: #2980b9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">СтройМаркет</a>
+            <div class="nav-menu">
+                <a href="/sales" class="nav-link">Акции</a>
+                <a href="/delivery" class="nav-link">Доставка</a>
+                <a href="/contacts" class="nav-link">Контакты</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="contact-main">
+        <div class="contact-hero">
+            <h1>Контакты</h1>
+            <p>Свяжитесь с нами удобным для вас способом</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h3>Телефон</h3>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+
+            <div class="contact-card">
+                <h3>Email</h3>
+                <p><a href="mailto:info@stroymarket.ru">info@stroymarket.ru</a></p>
+            </div>
+
+            <div class="contact-card">
+                <h3>Адрес</h3>
+                <p>г. Москва, ул. Строителей, 15</p>
+                <p>Ежедневно с 9:00 до 21:00</p>
+            </div>
+
+            <div class="contact-card">
+                <h3>Социальные сети</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">VKontakte</a>
+                    <a href="#" class="social-icon">Telegram</a>
+                    <a href="#" class="social-icon">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>+7 (495) 123-45-67</p>
+                <p>support@stroymarket.ru</p>
+            </div>
+            <div class="footer-section">
+                <h3>Адрес</h3>
+                <p>Москва, ул. Строителей, 15</p>
+                <p>Ежедневно 9:00–21:00</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -10,7 +10,6 @@ router = APIRouter()
 
 
 templates = Jinja2Templates(directory="frontend")
-# Роут для добавления товара в корзину
 @router.post("/add_to_cart")
 async def add_to_cart(
     request: Request,
@@ -25,12 +24,12 @@ async def add_to_cart(
         cart_key = f"cart:{user_id}"
         redis_client.hincrby(cart_key, product_id, 1)
         
-        # Редирект с параметром
+
         return RedirectResponse(url="/?added_to_cart=true", status_code=303)
     
     except Exception as e:
         return RedirectResponse(url="/error", status_code=500)
-# Отображение товаров в корзине
+
 @router.get("/view_cart", response_class=HTMLResponse)
 async def view_cart(request: Request, current_user: dict = Depends(get_current_user)):
     if not current_user:

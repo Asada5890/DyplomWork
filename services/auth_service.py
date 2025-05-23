@@ -42,6 +42,10 @@ class AuthService:
             settings.SECRET_KEY,
             headers={'alg': settings.JWT_ALGORITHM, 'typ': 'JWT'}
         )
+
+
+
+
     def login(self, user:UserDTO ) -> Token:
         """
         Проверяет учетные данные пользователя и создает токен доступа.
@@ -51,13 +55,13 @@ class AuthService:
         :return: Объект Token с токеном доступа и его типом.
         :raises HTTPException: Если учетные данные неверны.
         """
-        access_token = self.create_access_token(AuthSub(**user.model_dump()))  # or user_id
-        refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))  # or user_id
+        access_token = self.create_access_token(AuthSub(**user.model_dump()))  
+        refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))  
 
         return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
 
     async def register(self, user: UserDTO) -> Token:
-        access_token = self.create_access_token(AuthSub(**user.model_dump()))  # or user_id
-        refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))  # or user_id
+        access_token = self.create_access_token(AuthSub(**user.model_dump())) 
+        refresh_token = self.create_refresh_token(AuthSub(**user.model_dump()))
 
         return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")

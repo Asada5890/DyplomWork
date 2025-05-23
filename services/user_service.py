@@ -30,7 +30,7 @@ class UserService:  # Общий класс пользователей
            логин, пароль, итд 
         """
 
-        # Проверка существующего пользователя
+
         existing_user = self.db.query(User).filter(
             (User.email == user_data.email)
         ).first()
@@ -39,7 +39,7 @@ class UserService:  # Общий класс пользователей
             raise UniqueViolation("Пользователь с таким email или номером телефона уже существует")
         data_to_orm = user_data.dict()
         data_to_orm['password'] = get_password_hash(data_to_orm['password'])
-        # Создаем нового пользователя
+
         db_user = User(**data_to_orm)
         self.db.add(db_user)
         self.db.commit()

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, Form
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Form, logger
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from db.redis import redis_client
@@ -64,14 +64,14 @@ async def create_order(
     db: Session = Depends(get_db)
 ):
     if not current_user:
-        return RedirectResponse(url="/login")
+        return RedirectResponse(url="/login", status_code=303)  # 303 для корректной переадресации после POST
     
     user_id = current_user["id"]
     cart_key = f"cart:{user_id}"
     cart_items = redis_client.hgetall(cart_key)
     
     if not cart_items:
-        return RedirectResponse(url="/view_cart")
+        return RedirectResponse(url="/view_cart", status_code=303)
     
     product_service = ProductService()
     valid_items = []
@@ -83,21 +83,33 @@ async def create_order(
             })
     
     if not valid_items:
-        return RedirectResponse(url="/view_cart")
-    
-    # Создание заказа
-    new_order = Order(
-        user_id=user_id,
-        items=valid_items,
-        phone=phone,
-        address=address
-    )
+        return RedirectResponse(url="/view_cart", status_code=303)
     
     try:
+        new_order = Order(
+            user_id=user_id,
+            items=valid_items,
+            phone=phone,
+            address=address
+        )
         db.add(new_order)
         db.commit()
         redis_client.delete(cart_key)
-        return RedirectResponse(url="/")
+        return RedirectResponse(url="/success_checkout", status_code=303)
     except Exception as e:
         db.rollback()
-        return RedirectResponse(url="/error?message=Order creation failed")
+        logger.error(f"Ошибка: {e}")
+        return RedirectResponse(url="/error", status_code=303)
+    
+
+@router.get('/success_checkout', response_class=HTMLResponse)
+def view_success_checkout(
+    request: Request,
+):
+
+    return templates.TemplateResponse(
+        "success_checkout.html",
+        {
+            "request": request
+        }
+    )

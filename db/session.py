@@ -5,15 +5,15 @@ from contextlib import contextmanager
 
 from core.settings import settings
 
-# SQLite database URL (can be in memory or file-based)
 
-# Create engine
+
+
 engine = create_engine(
     settings.SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False}  # Needed for SQLite
+    connect_args={"check_same_thread": False}  
 )
 
-# Session factory
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class for models
