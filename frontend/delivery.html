@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доставка - СтройМаркет</title>
+    <style>
+        /* Базовые стили из шаблона */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+        body { background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: #2c3e50; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .logo { color: white; font-size: 1.8rem; font-weight: bold; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; }
+        .nav-link { color: #ecf0f1; text-decoration: none; transition: color 0.3s; }
+        .nav-link:hover { color: #3498db; }
+        main { flex: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        footer { background: #2c3e50; color: white; padding: 2rem; margin-top: auto; }
+
+        /* Стили для страницы доставки */
+        .delivery-main {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .delivery-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .delivery-zones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .zone-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+        }
+
+        .zone-title {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .delivery-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .delivery-table th,
+        .delivery-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .delivery-table th {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .delivery-features {
+            margin: 3rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .notice-box {
+            background: #fff9e6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid #ffd700;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">СтройМаркет</a>
+            <div class="nav-menu">
+                <a href="/sales" class="nav-link">Акции</a>
+                <a href="/delivery" class="nav-link">Доставка</a>
+                <a href="/contacts" class="nav-link">Контакты</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="delivery-main">
+        <div class="delivery-hero">
+            <h1>Условия доставки</h1>
+            <p>Быстрая и надежная доставка строительных материалов</p>
+        </div>
+
+        <div class="delivery-zones">
+            <div class="zone-card">
+                <h3 class="zone-title">🏙 В пределах МКАД</h3>
+                <ul>
+                    <li>Минимальный заказ: 15 000 ₽</li>
+                    <li>Стоимость: 1 500 ₽</li>
+                    <li>Срок: 1-2 дня</li>
+                </ul>
+            </div>
+
+            <div class="zone-card">
+                <h3 class="zone-title">🚚 До 20 км от МКАД</h3>
+                <ul>
+                    <li>Минимальный заказ: 20 000 ₽</li>
+                    <li>Стоимость: 2 500 ₽ + 25 ₽/км</li>
+                    <li>Срок: 2-3 дня</li>
+                </ul>
+            </div>
+
+            <div class="zone-card">
+                <h3 class="zone-title">📍 Дальние регионы</h3>
+                <ul>
+                    <li>Минимальный заказ: 50 000 ₽</li>
+                    <li>Стоимость: индивидуально</li>
+                    <li>Срок: от 3 дней</li>
+                </ul>
+            </div>
+        </div>
+
+        <table class="delivery-table">
+            <thead>
+                <tr>
+                    <th>Услуга</th>
+                    <th>Описание</th>
+                    <th>Стоимость</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Подъем на этаж</td>
+                    <td>Ручной подъем без лифта</td>
+                    <td>100 ₽/этаж за тонну</td>
+                </tr>
+                <tr>
+                    <td>Сборка конструкций</td>
+                    <td>Простая сборка мебели и конструкций</td>
+                    <td>15% от стоимости товара</td>
+                </tr>
+                <tr>
+                    <td>Вечерняя доставка</td>
+                    <td>Доставка после 18:00</td>
+                    <td>+25% к стоимости</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="delivery-features">
+            <div class="feature-card">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5M12,2A7,7 0 0,1 19,9C19,14.25 12,22 12,22C12,22 5,14.25 5,9A7,7 0 0,1 12,2M12,4A5,5 0 0,0 7,9C7,10 7,12 12,18.71C17,12 17,10 17,9A5,5 0 0,0 12,4Z"/>
+                </svg>
+                <h3>Отслеживание</h3>
+                <p>Онлайн-отслеживание груза в реальном времени</p>
+            </div>
+
+            <div class="feature-card">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M12,15A2,2 0 0,1 14,17A2,2 0 0,1 12,19A2,2 0 0,1 10,17A2,2 0 0,1 12,15M12,1L21,5V11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1Z"/>
+                </svg>
+                <h3>Страхование</h3>
+                <p>Все грузы застрахованы на полную стоимость</p>
+            </div>
+
+            <div class="feature-card">
+                <svg class="feature-icon" viewBox="0 0 24 24">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                </svg>
+                <h3>24/7 Поддержка</h3>
+                <p>Круглосуточная служба поддержки клиентов</p>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <h4>Важно знать:</h4>
+            <ul>
+                <li>Доставка осуществляется только после 100% предоплаты</li>
+                <li>Груз хранится на складе 3 рабочих дня бесплатно</li>
+                <li>Точное время доставки согласовывается за день</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>+7 (495) 123-45-67</p>
+                <p>support@stroymarket.ru</p>
+            </div>
+            <div class="footer-section">
+                <h3>Адрес</h3>
+                <p>Москва, ул. Строителей, 15</p>
+                <p>Ежедневно 9:00–21:00</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

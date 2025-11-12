@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора — Товары</title>
+    <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Товары — Панель администратора</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #1e1e2f;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: #2b2b3d;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #bbb;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: #2b2b3d;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
+            color: #ffffff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e1e2f;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid #444;
+            text-align: left;
+        }
+
+        th {
+            background: #2b2b3d;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #25253a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn.edit {
+            background: #3f51b5;
+        }
+
+        .btn.edit:hover {
+            background: #5c6bc0;
+        }
+
+        .btn.delete {
+            background: #d32f2f;
+        }
+
+        .btn.delete:hover {
+            background: #b71c1c;
+        }
+
+        form {
+            margin: 0;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>Панель администратора</h1>
+        <div class="nav-links">
+            <a href="/admin">Добавить товар</a>
+            <a href="/admin/orders">Просмотр заказов</a>
+            <a href="/admin/products">Список товаров</a>
+            <a href="/admin/users">Пользователи</a>
+            <a href="/auth/logout">Выход</a>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h2>Список товаров</h2>
+        <h2>{{ meassage }}</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Цена</th>
+                    <th>Категория</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.price }} ₽</td>
+                    <td>{{ product.category }}</td>
+                    <td class="actions">
+                        <a href="/admin/products/edit/{{ product._id }}" class="btn edit">Редактировать</a>
+                        <form action="/admin/products/{{ product['_id'] }}" method="post">
+                            <button type="submit" class="btn delete">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-message">Нет товаров для отображения.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

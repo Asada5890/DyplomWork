@@ -171,4 +171,13 @@ cython_debug/
 .ruff_cache/
 
 # PyPI configuration file
-.pypirc
+.pypircdata/db/
+data/db/WiredTiger
+data/db/WiredTiger.lock
+data/db/WiredTiger.turtle
+data/db/WiredTiger.wte
+data/db/WiredTiger.wt
+data/db/WiredTigerHS.wt
+data/db/_mdb_catalog.wt
+data/db/.
+data/db

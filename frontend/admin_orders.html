@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель — Управление заказами</title>
+    <style>
+        /* Базовые стили */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #1e1e2f;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #2b2b3d;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #bbb;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        /* Основной контент */
+        .orders-dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1800px;
+            margin: 2rem auto;
+        }
+
+        .status-column {
+            background: #2b2b3d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .column-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #3d3d4d;
+        }
+
+        .column-title {
+            font-size: 1.4rem;
+            color: #fff;
+            margin: 0;
+        }
+
+        .orders-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        /* Карточка заказа */
+        .order-card {
+            background: #3d3d4d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .order-info {
+            margin-bottom: 1rem;
+        }
+
+        .order-info div {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .orders-dashboard {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .status-column {
+                max-height: none;
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* Общие элементы */
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-new { background: #4CAF50; }
+        .status-processing { background: #FFC107; color: #000; }
+        .status-completed { background: #2196F3; }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-edit {
+            background: #FFC107;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            background: #F44336;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        @keyframes highlight {
+            0% { background: #4CAF5055; }
+            100% { background: #3d3d4d; }
+        }
+        
+        .no-orders {
+            color: #666;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .order-card {
+            position: relative;
+        }
+        
+        .order-card[data-order-id] {
+            transition: background 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Панель администратора</h1>
+        <div class="nav-links">
+            <a href="/admin/add-product">Добавить товар</a>
+            <a href="/admin/orders">Просмотр заказов</a>
+            <a href="/admin/products">Список товаров</a>
+            <a href="/admin/users">Пользователи</a>
+            <a href="/auth/logout">Выход</a>
+        </div>
+    </nav>
+
+    <div class="orders-dashboard">
+        <!-- Колонка "Новые" -->
+        <div class="status-column">
+            <div class="column-header">
+                <h2 class="column-title">Новые заказы</h2>
+            </div>
+            <div class="orders-list">
+                {% for order in orders if order.status == 'new' %}
+                <div class="order-card">
+                    <div class="order-info">
+                        <div><strong>ID:</strong> {{ order.id }}</div>
+                        <div><strong>Пользователь:</strong> {{ order.user_email }}</div>
+                        <div><strong>Телефон:</strong> {{ order.phone }}</div>
+                        <div><strong>Адрес:</strong> {{ order.address }}</div>
+                        <div><strong>Дата:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                        <div>
+                            <span class="status-badge status-{{ order.status }}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <a href="/admin/orders/{{ order.id }}/update-status" class="btn btn-edit">Изменить</a>
+                        <button class="btn btn-delete">Удалить</button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-orders">Нет новых заказов</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Колонка "В процессе" -->
+        <div class="status-column">
+            <div class="column-header">
+                <h2 class="column-title">В процессе</h2>
+            </div>
+            <div class="orders-list">
+                {% for order in orders if order.status == 'processing' %}
+                <div class="order-card">
+                    <div class="order-info">
+                        <div><strong>ID:</strong> {{ order.id }}</div>
+                        <div><strong>Пользователь:</strong> {{ order.user_email }}</div>
+                        <div><strong>Телефон:</strong> {{ order.phone }}</div>
+                        <div><strong>Адрес:</strong> {{ order.address }}</div>
+                        <div><strong>Дата:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                        <div>
+                            <span class="status-badge status-{{ order.status }}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <a href="/admin/orders/{{ order.id }}/update-status" class="btn btn-edit">Изменить</a>
+                        <button class="btn btn-delete">Удалить</button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-orders">Нет заказов в обработке</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Колонка "Завершенные" -->
+        <div class="status-column">
+            <div class="column-header">
+                <h2 class="column-title">Завершенные</h2>
+            </div>
+            <div class="orders-list">
+                {% for order in orders if order.status == 'completed' %}
+                <div class="order-card">
+                    <div class="order-info">
+                        <div><strong>ID:</strong> {{ order.id }}</div>
+                        <div><strong>Пользователь:</strong> {{ order.user_email }}</div>
+                        <div><strong>Телефон:</strong> {{ order.phone }}</div>
+                        <div><strong>Адрес:</strong> {{ order.address }}</div>
+                        <div><strong>Дата:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                        <div>
+                            <span class="status-badge status-{{ order.status }}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <a href="/admin/orders/{{ order.id }}/update-status" class="btn btn-edit">Изменить</a>
+                        <button class="btn btn-delete">Удалить</button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-orders">Нет завершенных заказов</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Принудительное обновление страницы
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            if(params.has('updated')) {
+                // Убираем параметр из URL без перезагрузки
+                history.replaceState({}, document.title, window.location.pathname);
+                
+                // Мини-анимация обновления для визуальной обратной связи
+                const updatedOrderId = params.get('updated');
+                const orderCard = document.querySelector(`[data-order-id="${updatedOrderId}"]`);
+                
+                if(orderCard) {
+                    orderCard.style.animation = 'highlight 1.5s';
+                    orderCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
+            // Добавляем обработчик для кнопки удаления
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if(!confirm('Вы точно хотите удалить этот заказ?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        })();
+    </script>
+
+
+</body>
+</html>
+
+
+
